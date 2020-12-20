@@ -1,0 +1,28 @@
+{
+  "name": "text-editor-wc",
+  "version": "1.0.0",
+  "description": "A webcomponent to implement a text editor with default text formatting",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KevvKo/text-editor-wc.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KevvKo/text-editor-wc/issues"
+  },
+  "homepage": "https://github.com/KevvKo/text-editor-wc#readme",
+  "devDependencies": {
+    "webpack": "^5.11.0",
+    "webpack-cli": "^4.2.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.20"
+  }
+}
