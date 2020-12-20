@@ -34,4 +34,5 @@ coverage
 # Optional npm cache directory
 .npm
 
-
+# distribution-files
+.dist
