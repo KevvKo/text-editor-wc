@@ -21,22 +21,39 @@ class TextEditor extends HTMLElement {
                 border: 1px solid #D2D2D2; 
             }
 
-            #toolbox{
-                
+            .toolbox-button{
+                display: inline-block;
+                padding: 4px;
             }
 
-            #content{
-                flex-grow: 2;
+            .toolbox-button:hover{
+                cursor: pointer;
+                transition: 0.1s;
+                background: #7995A8;
             }
+
+            #content{ 
+                border-top: 1px solid #D2D2D2; 
+                flex-grow: 2; }
 
         </style>
         <div id="text-editor" >
             <div id="toolbox">
-                <img src="./assets/img/format_bold-black-24dp.svg">
-                <img src="./assets/img/format_italic-black-24dp.svg">
-                <img src="./assets/img/format_underlined-black-24dp.svg">
-                <img src="./assets/img/format_list_bulleted-black-24dp.svg">
-                <img src="./assets/img/format_list_numbered-black-24dp.svg">
+                <span class="toolbox-button">
+                    <img src="./assets/img/format_bold-black-24dp.svg">
+                </span>
+                <span class="toolbox-button">
+                    <img src="./assets/img/format_italic-black-24dp.svg">
+                </span>
+                <span class="toolbox-button">
+                    <img src="./assets/img/format_underlined-black-24dp.svg">
+                </span>
+                <span class="toolbox-button">    
+                    <img src="./assets/img/format_list_bulleted-black-24dp.svg">
+                </span>
+                <span class="toolbox-button">
+                    <img src="./assets/img/format_list_numbered-black-24dp.svg">
+                </span>
             </div>
             <div id="content" contenteditable="true"></div>
         </div>`;
