@@ -16,14 +16,19 @@ class TextEditor extends HTMLElement {
                 width: 500px;
                 height: 350px;
                 display: flex;
+                flex-direction: column;
                 border-radius: 5px;
                 border: 1px solid #D2D2D2; 
             }
 
-            #content{
-                height: 100%;
-                width: 100%;
+            #toolbox{
+                
             }
+
+            #content{
+                flex-grow: 2;
+            }
+
         </style>
         <div id="text-editor" >
             <div id="toolbox">
