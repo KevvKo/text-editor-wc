@@ -3,40 +3,21 @@ class TextEditor extends HTMLElement {
     constructor(){
         super();
 
+        // Apply external styles to the shadow dom
+        const link = document.createElement('link');
+        link.setAttribute('rel', 'stylesheet');
+        link.setAttribute('href', './assets/css/style.css');
+
         this.template = document.createElement('template');
         this.attachShadow({mode: 'open'}); 
+        this.shadowRoot.appendChild(link);
     }
+
 
     connectedCallback(){
 
         this.template.innerHTML = `
-        <style>
-
-            #text-editor{
-                width: 500px;
-                height: 350px;
-                display: flex;
-                flex-direction: column;
-                border-radius: 5px;
-                border: 1px solid #D2D2D2; 
-            }
-
-            .toolbox-button{
-                display: inline-block;
-                padding: 4px;
-            }
-
-            .toolbox-button:hover{
-                cursor: pointer;
-                transition: 0.1s;
-                background: #7995A8;
-            }
-
-            #content{ 
-                border-top: 1px solid #D2D2D2; 
-                flex-grow: 2; }
-
-        </style>
+        
         <div id="text-editor" >
             <div id="toolbox">
                 <span class="toolbox-button">

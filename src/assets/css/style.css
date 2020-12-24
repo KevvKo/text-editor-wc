@@ -1,0 +1,23 @@
+#text-editor{
+    width: 500px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    border: 1px solid #D2D2D2; 
+}
+
+.toolbox-button{
+    display: inline-block;
+    padding: 4px;
+}
+
+.toolbox-button:hover{
+    cursor: pointer;
+    transition: 0.1s;
+    background: #7995A8;
+}
+
+#content{ 
+    border-top: 1px solid #D2D2D2; 
+    flex-grow: 2; }
