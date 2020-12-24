@@ -3,19 +3,8 @@ class TextEditor extends HTMLElement {
     constructor(){
         super();
 
-        // Apply external styles to the shadow dom
-        const link = document.createElement('link');
-        link.setAttribute('rel', 'stylesheet');
-        link.setAttribute('href', './assets/css/style.css');
-
+        //inline html template
         this.template = document.createElement('template');
-        this.attachShadow({mode: 'open'}); 
-        this.shadowRoot.appendChild(link);
-    }
-
-
-    connectedCallback(){
-
         this.template.innerHTML = `
         
         <div id="text-editor" >
@@ -39,7 +28,15 @@ class TextEditor extends HTMLElement {
             <div id="content" contenteditable="true"></div>
         </div>`;
 
+        // Apply external styles to the shadow dom
+        const link = document.createElement('link');
+        link.setAttribute('rel', 'stylesheet');
+        link.setAttribute('href', './assets/css/style.css');
+
+        this.attachShadow({mode: 'open'}); 
+        this.shadowRoot.appendChild(link);
         this.shadowRoot.appendChild(this.template.content.cloneNode(true));
-    };
+
+    }
 }
 customElements.define('text-editor', TextEditor)
