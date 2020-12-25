@@ -34,29 +34,26 @@ class TextEditor extends HTMLElement {
 
         boldButton.addEventListener('click', () => {
             this.changeClass(boldButton)
-            this.format('bold')
+            this.formatBold()
         })
 
         italicButton.addEventListener('click', () => {
             this.changeClass(italicButton)
-            this.format('italic')
         })
 
         underlinedButton.addEventListener('click', () => {
             this.changeClass(underlinedButton)
-            this.format('underline')
         })
 
         unorderedButton.addEventListener('click', () => {
             this.changeClass(unorderedButton)
             this.removeActiveState(orderedButton)
-            this.format('insertUnorderedList')
+
         })
 
         orderedButton.addEventListener('click', () => {
             this.changeClass(orderedButton)
             this.removeActiveState(unorderedButton)
-            this.format('insertOrderedList')
         })
 
         //create the images
@@ -103,10 +100,6 @@ class TextEditor extends HTMLElement {
         template.appendChild(textbox);
     }
 
-    format(command, value){
-        document.execCommand(command, false, value)
-    }
-
     changeClass(button){
         if(button.classList.contains('active')){
             button.classList.remove('active')
@@ -120,5 +113,12 @@ class TextEditor extends HTMLElement {
             button.classList.remove('active')
         }
     }
+
+    formatBold(){
+        const selection = window.getSelection()
+        const bold = document.createElement('b')
+        selection.getRangeAt(0).surroundContents(bold)
+    }
 }
+
 customElements.define('text-editor', TextEditor)
