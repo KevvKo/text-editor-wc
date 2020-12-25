@@ -14,7 +14,7 @@ class TextEditor extends HTMLElement {
         textbox.setAttribute('id', 'content');
         textbox.setAttribute('contentEditable', true);
         
-        //create the spans and button
+        //create the spans and buttons 
         const boldButton = document.createElement('span');
         boldButton.setAttribute('class', 'toolbox-button');
 
@@ -29,6 +29,33 @@ class TextEditor extends HTMLElement {
 
         const orderedButton = document.createElement('span');
         orderedButton.setAttribute('class', 'toolbox-button');
+
+        // add all functions to the format buttons
+
+        boldButton.addEventListener('click', () => {
+            this.changeClass(boldButton)
+            this.format('bold')
+        })
+
+        italicButton.addEventListener('click', () => {
+            this.changeClass(italicButton)
+            this.format('italic')
+        })
+
+        underlinedButton.addEventListener('click', () => {
+            this.changeClass(underlinedButton)
+            this.format('underline')
+        })
+
+        unorderedButton.addEventListener('click', () => {
+            this.changeClass(unorderedButton)
+            this.format('insertUnorderedList')
+        })
+
+        orderedButton.addEventListener('click', () => {
+            this.changeClass(orderedButton)
+            this.format('insertOrderedList')
+        })
 
         //create the images
         const imageBold = document.createElement('img')
@@ -72,6 +99,18 @@ class TextEditor extends HTMLElement {
         orderedButton.appendChild(imageOrderedList);
 
         template.appendChild(textbox);
+    }
+
+    format(command, value){
+        document.execCommand(command, false, value)
+    }
+
+    changeClass(button){
+        if(button.classList.contains('active')){
+            button.classList.remove('active')
+        }else{
+            button.classList.add('active')
+        }
     }
 }
 customElements.define('text-editor', TextEditor)
