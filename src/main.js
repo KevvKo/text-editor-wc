@@ -49,11 +49,13 @@ class TextEditor extends HTMLElement {
 
         unorderedButton.addEventListener('click', () => {
             this.changeClass(unorderedButton)
+            this.removeActiveState(orderedButton)
             this.format('insertUnorderedList')
         })
 
         orderedButton.addEventListener('click', () => {
             this.changeClass(orderedButton)
+            this.removeActiveState(unorderedButton)
             this.format('insertOrderedList')
         })
 
@@ -110,6 +112,12 @@ class TextEditor extends HTMLElement {
             button.classList.remove('active')
         }else{
             button.classList.add('active')
+        }
+    }
+    
+    removeActiveState(button){
+        if(button.classList.contains('active')){
+            button.classList.remove('active')
         }
     }
 }
