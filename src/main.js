@@ -16,18 +16,23 @@ class TextEditor extends HTMLElement {
         
         //create the spans and buttons 
         const boldButton = document.createElement('span');
+        boldButton.id = 'bold'
         boldButton.setAttribute('class', 'toolbox-button');
 
         const italicButton = document.createElement('span');
+        italicButton.id = 'italic'
         italicButton.setAttribute('class', 'toolbox-button');
 
         const underlinedButton = document.createElement('span');
+        underlinedButton.id = 'underlined'
         underlinedButton.setAttribute('class', 'toolbox-button');
 
         const unorderedButton = document.createElement('span');
+        unorderedButton.id = 'unorderedList'
         unorderedButton.setAttribute('class', 'toolbox-button');
 
         const orderedButton = document.createElement('span');
+        orderedButton.id = 'orderedList'
         orderedButton.setAttribute('class', 'toolbox-button');
 
         // add all functions to the format buttons
@@ -115,9 +120,7 @@ class TextEditor extends HTMLElement {
     }
 
     formatBold(){
-        const selection = window.getSelection()
-        const bold = document.createElement('b')
-        selection.getRangeAt(0).surroundContents(bold)
+
     }
 }
 
