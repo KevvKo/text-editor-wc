@@ -10,9 +10,9 @@ class TextEditor extends HTMLElement {
         const toolbox = document.createElement('div');
         toolbox.setAttribute('id', 'toolbox');
 
-        const textbox = document.createElement('div');
+        const textbox = document.createElement('textarea');
         textbox.setAttribute('id', 'content');
-        textbox.setAttribute('contentEditable', true);
+        textbox.setAttribute('autofocus', true);
         
         //create the spans and buttons 
         const boldButton = document.createElement('span');
@@ -119,9 +119,6 @@ class TextEditor extends HTMLElement {
         }
     }
 
-    formatBold(){
-
-    }
+    formatBold(){}
 }
-
 customElements.define('text-editor', TextEditor)
