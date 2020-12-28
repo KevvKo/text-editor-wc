@@ -35,4 +35,4 @@ coverage
 .npm
 
 # distribution-files
-.dist
+dist

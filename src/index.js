@@ -1,3 +1,11 @@
+import image1 from './assets/img/format_bold-black-24dp.svg';
+import image2 from './assets/img/format_italic-black-24dp.svg';
+import image3 from './assets/img/format_underlined-black-24dp.svg';
+import image4 from './assets/img/format_list_numbered-black-24dp.svg';
+import image5 from './assets/img/format_list_bulleted-black-24dp.svg';
+
+import './assets/css/style.css';
+
 class TextEditor extends HTMLElement {
 
     constructor(){
@@ -10,10 +18,10 @@ class TextEditor extends HTMLElement {
         const toolbox = document.createElement('div');
         toolbox.setAttribute('id', 'toolbox');
 
-        const textbox = document.createElement('textarea');
+        const textbox = document.createElement('div');
         textbox.setAttribute('id', 'content');
-        textbox.setAttribute('autofocus', true);
-        
+        textbox.setAttribute('contentEditable', true);
+
         //create the spans and buttons 
         const boldButton = document.createElement('span');
         boldButton.id = 'bold'
@@ -63,19 +71,19 @@ class TextEditor extends HTMLElement {
 
         //create the images
         const imageBold = document.createElement('img')
-        imageBold.src = "./assets/img/format_bold-black-24dp.svg"
+        imageBold.src = image1
         
         const imageItalic = document.createElement('img');
-        imageItalic.src = "./assets/img/format_italic-black-24dp.svg";
+        imageItalic.src = image2
 
         const imageUnderlined = document.createElement('img');
-        imageUnderlined.src = "./assets/img/format_underlined-black-24dp.svg";
+        imageUnderlined.src = image3
 
         const imageUnorderedList = document.createElement('img');
-        imageUnorderedList.src = "./assets/img/format_list_bulleted-black-24dp.svg";
+        imageUnorderedList.src = image4
 
         const imageOrderedList = document.createElement('img');
-        imageOrderedList.src = "./assets/img/format_list_numbered-black-24dp.svg";   
+        imageOrderedList.src = image5   
 
         const shadow = this.attachShadow({mode: 'open'}); 
 
