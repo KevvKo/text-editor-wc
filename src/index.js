@@ -128,5 +128,15 @@ class TextEditor extends HTMLElement {
     }
 
     formatBold(){}
+
+    formatItalic(){}
+
+    formatUnderlined(){}
+
+    formatUnorderedList(){}
+
+    formatOrderedList(){}
+
+    getCaretPosition(){}
 }
 customElements.define('text-editor', TextEditor)
