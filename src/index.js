@@ -137,7 +137,9 @@ class TextEditor extends HTMLElement {
         }
     }
 
-    formatBold(){}
+    formatBold(){
+        this.setCaret()
+    }
 
     formatItalic(){}
 
@@ -151,11 +153,28 @@ class TextEditor extends HTMLElement {
         start: integer - startindex of a range for the caret
         end: integer . endindex of a range for the caret
     */
-    getCaretPosition(start, end){
+    getCaret(start, end){
 
         if(start === end) return start
         
         return end
     }
+
+    setCaret(){
+        const contentbox = this.shadowRoot.getElementById('content');
+        contentbox.focus();
+
+        const selection = window.getSelection()
+        const caretIndex = this.getCaret(
+            selection.anchorOffset, 
+            selection.focusOffset
+        );
+
+        const range = new Range()
+        range.setStart( selection.focusNode, caretIndex );
+        range.setEnd( selection.focusNode, caretIndex );
+    }
+
 }
+g
 customElements.define('text-editor', TextEditor)
