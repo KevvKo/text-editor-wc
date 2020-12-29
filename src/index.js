@@ -52,21 +52,25 @@ class TextEditor extends HTMLElement {
 
         italicButton.addEventListener('click', () => {
             this.changeClass(italicButton)
+            this.formatItalic()
         })
 
         underlinedButton.addEventListener('click', () => {
             this.changeClass(underlinedButton)
+            this.formatUnderlined()
         })
 
         unorderedButton.addEventListener('click', () => {
             this.changeClass(unorderedButton)
             this.removeActiveState(orderedButton)
+            this.formatUnorderedList()
 
         })
 
         orderedButton.addEventListener('click', () => {
             this.changeClass(orderedButton)
             this.removeActiveState(unorderedButton)
+            this.formatOrderedList()
         })
 
         //create the images
@@ -113,6 +117,9 @@ class TextEditor extends HTMLElement {
         template.appendChild(textbox);
     }
 
+    /* PARAMS:
+    	button: button - a button element from the toolbox
+     */
     changeClass(button){
         if(button.classList.contains('active')){
             button.classList.remove('active')
@@ -121,6 +128,9 @@ class TextEditor extends HTMLElement {
         }
     }
     
+    /* PARAMS:
+    	button: button - a button element from the toolbox
+     */
     removeActiveState(button){
         if(button.classList.contains('active')){
             button.classList.remove('active')
@@ -137,6 +147,15 @@ class TextEditor extends HTMLElement {
 
     formatOrderedList(){}
 
-    getCaretPosition(){}
+    /* PARAMS: 
+        start: integer - startindex of a range for the caret
+        end: integer . endindex of a range for the caret
+    */
+    getCaretPosition(start, end){
+
+        if(start === end) return start
+        
+        return end
+    }
 }
 customElements.define('text-editor', TextEditor)
