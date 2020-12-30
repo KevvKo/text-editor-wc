@@ -4,8 +4,7 @@ import image3 from './assets/img/format_underlined-black-24dp.svg';
 import image4 from './assets/img/format_list_numbered-black-24dp.svg';
 import image5 from './assets/img/format_list_bulleted-black-24dp.svg';
 
-import './assets/css/style.css';
-
+import {style} from './style'
 class TextEditor extends HTMLElement {
 
     constructor(){
@@ -14,6 +13,7 @@ class TextEditor extends HTMLElement {
         //inline html template
         const template = document.createElement('div');
         template.setAttribute('id', 'text-editor');
+        template.innerHTML = style;
 
         const toolbox = document.createElement('div');
         toolbox.setAttribute('id', 'toolbox');
@@ -90,14 +90,6 @@ class TextEditor extends HTMLElement {
         imageOrderedList.src = image5   
 
         const shadow = this.attachShadow({mode: 'open'}); 
-
-        //external css link
-        const link = document.createElement('link');
-        link.setAttribute('rel', 'stylesheet');
-        link.setAttribute('href', './assets/css/style.css');
-                
-        //append all childs to the shadow DOM
-        shadow.appendChild(link);
         shadow.appendChild(template);
 
         template.appendChild(toolbox);
@@ -176,5 +168,5 @@ class TextEditor extends HTMLElement {
     }
 
 }
-g
+
 customElements.define('text-editor', TextEditor)

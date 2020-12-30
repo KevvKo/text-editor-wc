@@ -1,3 +1,5 @@
+export const style = `
+<style>
 #text-editor{
     width: 500px;
     height: 350px;
@@ -19,6 +21,7 @@
 .active img{
     filter: invert(42%) sepia(85%) saturate(458%) hue-rotate(161deg) brightness(93%) contrast(83%);
 }
+
 .toolbox-button:hover{
     cursor: pointer;
     transition: 0.1s;
@@ -33,3 +36,5 @@
     word-break: break-all;
     resize: none;
 }
+</style>
+`
