@@ -4,7 +4,7 @@ import image3 from './assets/img/format_underlined-black-24dp.svg';
 import image4 from './assets/img/format_list_numbered-black-24dp.svg';
 import image5 from './assets/img/format_list_bulleted-black-24dp.svg';
 
-import {style} from './style'
+import {style} from './assets/js/style'
 class TextEditor extends HTMLElement {
 
     constructor(){
