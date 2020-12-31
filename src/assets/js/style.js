@@ -11,7 +11,9 @@ export const style = `
 
 .toolbox-button{
     display: inline-block;
-    padding: 4px;
+    padding: 2px;
+    margin: 4px;
+    border-radius: 3px;
 }
 
 .active{
@@ -26,6 +28,12 @@ export const style = `
     cursor: pointer;
     transition: 0.1s;
     background: #DADADA;
+}
+
+#underlined{
+    padding-right: 4px;
+    margin-right: 0;
+    border-right: 1px solid #DADADA;
 }
 
 #content{ 
