@@ -129,8 +129,18 @@ class TextEditor extends HTMLElement {
     */
 
     formatBold(boldButton){
+        let selection = window.getSelection()
+        let element = document.createElement('b')
+        let range;
+
+        if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
+
+            range = selection.getRangeAt(0)
+            range.surroundContents(element)
+        }
+
         this.changeClass(boldButton)
-        this.setCaret()
+        // // this.setCaret()
     }
 
     /*
@@ -138,8 +148,18 @@ class TextEditor extends HTMLElement {
     */
 
     formatItalic(italicButton){
+        let selection = window.getSelection()
+        let element = document.createElement('i')
+        let range;
+
+        if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
+
+            range = selection.getRangeAt(0)
+            range.surroundContents(element)
+        }
+
         this.changeClass(italicButton)
-        this.setCaret()
+        // this.setCaret()
     }
 
     /*
@@ -147,8 +167,18 @@ class TextEditor extends HTMLElement {
     */
 
     formatUnderlined(underlinedButton){
+        let selection = window.getSelection()
+        let element = document.createElement('u')
+        let range;
+
+        if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
+
+            range = selection.getRangeAt(0)
+            range.surroundContents(element)
+        }
+
         this.changeClass(underlinedButton)
-        this.setCaret()
+        // this.setCaret()
     }
 
      /*
@@ -158,7 +188,7 @@ class TextEditor extends HTMLElement {
     formatUnorderedList(unorderedButton, orderedButton){
         this.changeClass(unorderedButton)
         this.removeActiveState(orderedButton)
-        this.setCaret()
+        // this.setCaret()
     }
 
     /*
@@ -169,7 +199,7 @@ class TextEditor extends HTMLElement {
     formatOrderedList(orderedButton, unorderedButton){
         this.changeClass(orderedButton)
         this.removeActiveState(unorderedButton)
-        this.setCaret()
+        // this.setCaret()
     }
 
     /* PARAMS: 
@@ -199,6 +229,10 @@ class TextEditor extends HTMLElement {
         range.setEnd( selection.focusNode, caretIndex );
     }
 
+
+    surroundSelection(element){
+
+    }
 }
 
 customElements.define('text-editor', TextEditor)
