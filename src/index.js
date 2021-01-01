@@ -46,31 +46,24 @@ class TextEditor extends HTMLElement {
         // add all functions to the format buttons
 
         boldButton.addEventListener('click', () => {
-            this.changeClass(boldButton)
-            this.formatBold()
+            this.formatBold(boldButton)
         })
 
         italicButton.addEventListener('click', () => {
-            this.changeClass(italicButton)
-            this.formatItalic()
+            this.formatItalic(italicButton)
         })
 
         underlinedButton.addEventListener('click', () => {
-            this.changeClass(underlinedButton)
-            this.formatUnderlined()
+            this.formatUnderlined(underlinedButton)
         })
 
         unorderedButton.addEventListener('click', () => {
-            this.changeClass(unorderedButton)
-            this.removeActiveState(orderedButton)
-            this.formatUnorderedList()
+            this.formatUnorderedList(unorderedButton, orderedButton)
 
         })
 
         orderedButton.addEventListener('click', () => {
-            this.changeClass(orderedButton)
-            this.removeActiveState(unorderedButton)
-            this.formatOrderedList()
+            this.formatOrderedList(orderedButton, unorderedButton)
         })
 
         //create the images
@@ -112,6 +105,7 @@ class TextEditor extends HTMLElement {
     /* PARAMS:
     	button: button - a button element from the toolbox
      */
+
     changeClass(button){
         if(button.classList.contains('active')){
             button.classList.remove('active')
@@ -123,28 +117,66 @@ class TextEditor extends HTMLElement {
     /* PARAMS:
     	button: button - a button element from the toolbox
      */
+
     removeActiveState(button){
         if(button.classList.contains('active')){
             button.classList.remove('active')
         }
     }
 
-    formatBold(){
+    /*
+        boldButton: button - button to format text bold
+    */
+
+    formatBold(boldButton){
+        this.changeClass(boldButton)
         this.setCaret()
     }
 
-    formatItalic(){}
+    /*
+        italicButton: button - button to format text italic
+    */
 
-    formatUnderlined(){}
+    formatItalic(italicButton){
+        this.changeClass(italicButton)
+        this.setCaret()
+    }
 
-    formatUnorderedList(){}
+    /*
+        underlinedButton: button - button to format text as underlined
+    */
 
-    formatOrderedList(){}
+    formatUnderlined(underlinedButton){
+        this.changeClass(underlinedButton)
+        this.setCaret()
+    }
+
+     /*
+        unorderedButton: button - button to insert a unordered List
+        orderedButton: button - button to insert a ordered list
+    */
+    formatUnorderedList(unorderedButton, orderedButton){
+        this.changeClass(unorderedButton)
+        this.removeActiveState(orderedButton)
+        this.setCaret()
+    }
+
+    /*
+        orderedButton: button - button to insert an ordered List
+        unorderedButton: button - button to insert an unordered list
+    */
+
+    formatOrderedList(orderedButton, unorderedButton){
+        this.changeClass(orderedButton)
+        this.removeActiveState(unorderedButton)
+        this.setCaret()
+    }
 
     /* PARAMS: 
         start: integer - startindex of a range for the caret
         end: integer . endindex of a range for the caret
     */
+
     getCaret(start, end){
 
         if(start === end) return start
