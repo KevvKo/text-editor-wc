@@ -8,7 +8,7 @@ import {style} from './assets/js/style'
 class TextEditor extends HTMLElement {
 
     constructor(){
-        super();
+        super()
 
         //inline html template
         const template = document.createElement('div');
@@ -102,8 +102,9 @@ class TextEditor extends HTMLElement {
         template.appendChild(textbox);
     }
 
-    /* PARAMS:
-    	button: button - a button element from the toolbox
+    /**
+     * 
+     * @param {button} button: a button element from the toolbox 
      */
 
     changeClass(button){
@@ -114,8 +115,9 @@ class TextEditor extends HTMLElement {
         }
     }
     
-    /* PARAMS:
-    	button: button - a button element from the toolbox
+    /**
+     * 
+     * @param {button} button 
      */
 
     removeActiveState(button){
@@ -129,20 +131,14 @@ class TextEditor extends HTMLElement {
     */
 
     formatBold(boldButton){
+
         let selection = window.getSelection()
         let element = document.createElement('b')
         let range;
 
         if(selection.type === 'Caret' && selection.isCollapsed){
 
-            element.innerHTML = '&#8203;';
-            range = selection.getRangeAt(0)
-            range.setStart(selection.anchorNode, selection.anchorOffset)
-            range.setEnd(selection.focusNode, selection.focusOffset)
-            range.insertNode(element)
-
-            range.setStart(element, 0)
-            range.setEnd(element, 0)
+            this.insertElement(element, selection, range)
         }
 
         if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
@@ -156,15 +152,21 @@ class TextEditor extends HTMLElement {
         this.setCaret()
     }
 
-    /*
-        italicButton: button - button to format text italic
-    */
+    /**
+     * 
+     * @param {button} italicButton: button to format text italic
+     */
 
     formatItalic(italicButton){
+
         let selection = window.getSelection()
         let element = document.createElement('i')
         let range;
 
+        if(selection.type === 'Caret' && selection.isCollapsed){
+
+            this.insertElement(element, selection, range)
+        }
         if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
 
             range = selection.getRangeAt(0)
@@ -172,17 +174,24 @@ class TextEditor extends HTMLElement {
         }
 
         this.changeClass(italicButton)
-        // this.setCaret()
+        this.setCaret()
     }
 
-    /*
-        underlinedButton: button - button to format text as underlined
-    */
+    /**
+     * 
+     * @param {button} underlinedButton: button to format text as underlined
+     */
 
     formatUnderlined(underlinedButton){
+
         let selection = window.getSelection()
         let element = document.createElement('u')
         let range;
+
+        if(selection.type === 'Caret' && selection.isCollapsed){
+
+            this.insertElement(element, selection, range)
+        }
 
         if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
 
@@ -191,34 +200,38 @@ class TextEditor extends HTMLElement {
         }
 
         this.changeClass(underlinedButton)
-        // this.setCaret()
+        this.setCaret()
     }
 
-     /*
-        unorderedButton: button - button to insert a unordered List
-        orderedButton: button - button to insert a ordered list
-    */
+    /**
+     * 
+     * @param {button} unorderedButton: button - button to insert a unordered List
+     * @param {button} orderedButton: button - button to insert a ordered list
+     */
+
     formatUnorderedList(unorderedButton, orderedButton){
         this.changeClass(unorderedButton)
         this.removeActiveState(orderedButton)
-        // this.setCaret()
+        this.setCaret()
     }
 
-    /*
-        orderedButton: button - button to insert an ordered List
-        unorderedButton: button - button to insert an unordered list
-    */
+    /**
+     * 
+     * @param {button} orderedButton - button to insert a ordered list
+     * @param {button} unorderedButton - button to insert a unordered List
+     */
 
     formatOrderedList(orderedButton, unorderedButton){
         this.changeClass(orderedButton)
         this.removeActiveState(unorderedButton)
-        // this.setCaret()
+        this.setCaret()
     }
 
-    /* PARAMS: 
-        start: integer - startindex of a range for the caret
-        end: integer . endindex of a range for the caret
-    */
+    /**
+     * 
+     * @param {integer} start: startindex of a range for the caret
+     * @param {integer} end: endindex of a range for the caret
+     */
 
     getCaret(start, end){
 
@@ -242,9 +255,27 @@ class TextEditor extends HTMLElement {
         range.setEnd( selection.focusNode, caretIndex );
     }
 
+    /**
+     * 
+     * @param {node} element  - a formatting node element ( <b>, <i>, <u>,---)
+     * @param {object} selection 
+     * @param {object} range 
+     */
 
-    surroundSelection(element){
+    insertElement(element, selection, range){
 
+        element.innerHTML = '&#8203;';
+        range = selection.getRangeAt(0)
+        range.setStart(selection.anchorNode, selection.anchorOffset)
+        range.setEnd(selection.focusNode, selection.focusOffset)
+        range.insertNode(element)
+
+        range.setStart(element, 0)
+        range.setEnd(element, 0)
+    }
+
+    connectedCallback() {
+        this.shadowRoot.getElementById('content').focus();
     }
 }
 
