@@ -142,15 +142,20 @@ class TextEditor extends HTMLElement {
         let selection = window.getSelection()
         let element = document.createElement('b')
         let range;
+        //remove formatting
+        if(boldButton.classList.contains("active")){
+            
+            this.removeFormatting(selection, range)    
+            this.changeClass(boldButton)
+            return
+        }
 
         this.changeClass(boldButton)
 
-        // insert an emtpy node
         if(selection.type === 'Caret' && selection.isCollapsed){
 
             this.insertElement(element, selection, range)
             return
-        
         }
 
         // surround the selected content
@@ -284,14 +289,27 @@ class TextEditor extends HTMLElement {
 
         range.setStart(element, 0)
         range.setEnd(element, 0)
+        element.focus()
     }
 
-    removeFormatting(){
+    /**
+     * 
+     * @param {Selection} selection 
+     * @param {Range} range 
+     */
+    removeFormatting(selection, range){
 
     }
 
     connectedCallback() {
-        this.shadowRoot.getElementById('content').focus();
+        
+        this.shadowRoot.getElementById('content').addEventListener('click', () => {
+
+        })
+
+        this.shadowRoot.getElementById('content').addEventListener('keydown', () => {
+   
+        })
     }
 }
 
