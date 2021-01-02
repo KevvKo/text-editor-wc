@@ -133,14 +133,27 @@ class TextEditor extends HTMLElement {
         let element = document.createElement('b')
         let range;
 
+        if(selection.type === 'Caret' && selection.isCollapsed){
+
+            element.innerHTML = '&#8203;';
+            range = selection.getRangeAt(0)
+            range.setStart(selection.anchorNode, selection.anchorOffset)
+            range.setEnd(selection.focusNode, selection.focusOffset)
+            range.insertNode(element)
+
+            range.setStart(element, 0)
+            range.setEnd(element, 0)
+        }
+
         if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
 
             range = selection.getRangeAt(0)
+            
             range.surroundContents(element)
         }
 
         this.changeClass(boldButton)
-        // // this.setCaret()
+        this.setCaret()
     }
 
     /*
