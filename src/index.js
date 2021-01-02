@@ -5,12 +5,19 @@ import image4 from './assets/img/format_list_numbered-black-24dp.svg';
 import image5 from './assets/img/format_list_bulleted-black-24dp.svg';
 
 import {style} from './assets/js/style'
+
+/**
+ @todo function to remove formatting
+ @todo implementation for dynamically formatting across multiple differenct nodes
+ @todo implementation format functions ordered-/unordered list
+ @todo css-adjustments for toolbox
+ */
 class TextEditor extends HTMLElement {
 
     constructor(){
         super()
 
-        //inline html template
+        // inline html template
         const template = document.createElement('div');
         template.setAttribute('id', 'text-editor');
         template.innerHTML = style;
@@ -136,20 +143,22 @@ class TextEditor extends HTMLElement {
         let element = document.createElement('b')
         let range;
 
+        this.changeClass(boldButton)
+
+        // insert an emtpy node
         if(selection.type === 'Caret' && selection.isCollapsed){
 
             this.insertElement(element, selection, range)
+            return
+        
         }
 
+        // surround the selected content
         if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
 
             range = selection.getRangeAt(0)
-            
             range.surroundContents(element)
         }
-
-        this.changeClass(boldButton)
-        this.setCaret()
     }
 
     /**
@@ -163,18 +172,21 @@ class TextEditor extends HTMLElement {
         let element = document.createElement('i')
         let range;
 
+        this.changeClass(italicButton)
+
+        // insert an emtpy node
         if(selection.type === 'Caret' && selection.isCollapsed){
 
             this.insertElement(element, selection, range)
+            return
         }
+
+        // surround the selected content
         if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
 
             range = selection.getRangeAt(0)
             range.surroundContents(element)
         }
-
-        this.changeClass(italicButton)
-        this.setCaret()
     }
 
     /**
@@ -188,19 +200,21 @@ class TextEditor extends HTMLElement {
         let element = document.createElement('u')
         let range;
 
+        this.changeClass(underlinedButton)
+
+        // insert an emtpy node
         if(selection.type === 'Caret' && selection.isCollapsed){
 
             this.insertElement(element, selection, range)
+            return
         }
 
+        // surround the selected content
         if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
 
             range = selection.getRangeAt(0)
             range.surroundContents(element)
         }
-
-        this.changeClass(underlinedButton)
-        this.setCaret()
     }
 
     /**
@@ -212,7 +226,6 @@ class TextEditor extends HTMLElement {
     formatUnorderedList(unorderedButton, orderedButton){
         this.changeClass(unorderedButton)
         this.removeActiveState(orderedButton)
-        this.setCaret()
     }
 
     /**
@@ -224,7 +237,6 @@ class TextEditor extends HTMLElement {
     formatOrderedList(orderedButton, unorderedButton){
         this.changeClass(orderedButton)
         this.removeActiveState(unorderedButton)
-        this.setCaret()
     }
 
     /**
@@ -272,6 +284,10 @@ class TextEditor extends HTMLElement {
 
         range.setStart(element, 0)
         range.setEnd(element, 0)
+    }
+
+    removeFormatting(){
+
     }
 
     connectedCallback() {
