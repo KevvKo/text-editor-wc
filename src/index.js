@@ -145,7 +145,7 @@ class TextEditor extends HTMLElement {
         //remove formatting
         if(boldButton.classList.contains("active")){
             
-            this.removeFormatting(selection, range)    
+            this.removeFormatting(selection, 'B')    
             this.changeClass(boldButton)
             return
         }
@@ -180,7 +180,7 @@ class TextEditor extends HTMLElement {
 
         if(italicButton.classList.contains("active")){
             
-            this.removeFormatting(selection, range)    
+            this.removeFormatting(selection, 'I')    
             this.changeClass(italicButton)
             return
         }
@@ -215,7 +215,7 @@ class TextEditor extends HTMLElement {
 
         if(underlinedButton.classList.contains("active")){
             
-            this.removeFormatting(selection, range)    
+            this.removeFormatting(selection, 'U')    
             this.changeClass(underlinedButton)
             return
         }
@@ -310,19 +310,16 @@ class TextEditor extends HTMLElement {
     /**
      * 
      * @param {Selection} selection 
-     * @param {Range} range 
+     * @param {String} nodeName 
      */
-    removeFormatting(selection, range){
+    removeFormatting(selection, nodeName){
 
-        /**
-         * @todo add case: anchorNode and focusnode = #text, parentNode is bold
-         */
-
-        // remove node with emtty content
-        if(selection.type === "Caret" && selection.focusNode.nodeName === 'B'){
+        
+        if(selection.isCollapsed ){
             
-            selection.anchorNode.remove()
-            
+            // depend on selection, which case will be confirmed for an empty node
+            if( selection.focusNode.nodeName === nodeName ) selection.anchorNode.remove()
+            if( selection.anchorNode.parentNode.nodeName === nodeName) selection.anchorNode.parentNode.remove()
         }
         
     }
