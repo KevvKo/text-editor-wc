@@ -313,13 +313,29 @@ class TextEditor extends HTMLElement {
      * @param {String} nodeName 
      */
     removeFormatting(selection, nodeName){
-
         
         if(selection.isCollapsed ){
-            
+            let nodeIsEmpty;
+
             // depend on selection, which case will be confirmed for an empty node
-            if( selection.focusNode.nodeName === nodeName ) selection.anchorNode.remove()
-            if( selection.anchorNode.parentNode.nodeName === nodeName) selection.anchorNode.parentNode.remove()
+            // length of 1, cause the zero-width character is included -> just a temporary solution, until a better workflow is implemented
+
+            nodeIsEmpty = selection.anchorNode.parentNode.textContent.length === 1; 
+
+            if( selection.anchorNode.parentNode.nodeName === nodeName && nodeIsEmpty) {
+               console.log("t")
+                selection.anchorNode.parentNode.remove()
+                // this.setCaret()
+                return 
+            }
+
+            nodeIsEmpty = selection.anchorNode.textContent === ''
+            if( selection.focusNode.nodeName === nodeName ) {
+                console.log("b")
+
+                selection.anchorNode.remove()
+                // this.setCaret()
+            }
         }
         
     }
