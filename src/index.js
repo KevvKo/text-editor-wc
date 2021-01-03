@@ -155,6 +155,7 @@ class TextEditor extends HTMLElement {
         if(selection.type === 'Caret' && selection.isCollapsed){
 
             this.insertElement(element, selection, range)
+            element.focus()
             return
         }
 
@@ -176,6 +177,13 @@ class TextEditor extends HTMLElement {
         let selection = window.getSelection()
         let element = document.createElement('i')
         let range;
+
+        if(italicButton.classList.contains("active")){
+            
+            this.removeFormatting(selection, range)    
+            this.changeClass(italicButton)
+            return
+        }
 
         this.changeClass(italicButton)
 
@@ -204,6 +212,13 @@ class TextEditor extends HTMLElement {
         let selection = window.getSelection()
         let element = document.createElement('u')
         let range;
+
+        if(underlinedButton.classList.contains("active")){
+            
+            this.removeFormatting(selection, range)    
+            this.changeClass(underlinedButton)
+            return
+        }
 
         this.changeClass(underlinedButton)
 
@@ -289,7 +304,7 @@ class TextEditor extends HTMLElement {
 
         range.setStart(element, 0)
         range.setEnd(element, 0)
-        element.focus()
+        //element.focus()
     }
 
     /**
@@ -299,6 +314,17 @@ class TextEditor extends HTMLElement {
      */
     removeFormatting(selection, range){
 
+        /**
+         * @todo add case: anchorNode and focusnode = #text, parentNode is bold
+         */
+
+        // remove node with emtty content
+        if(selection.type === "Caret" && selection.focusNode.nodeName === 'B'){
+            
+            selection.anchorNode.remove()
+            
+        }
+        
     }
 
     connectedCallback() {
