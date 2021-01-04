@@ -269,23 +269,24 @@ class TextEditor extends HTMLElement {
 
         let selection = window.getSelection()
 
-        if(selection.anchorOffset === selection.focusOffset) return start
+        if(selection.anchorOffset === selection.focusOffset) return selection.anchorOffset
         
         return selection.focusOffset()
     }
 
     /**
      * 
-     * @param {integer} start: startindex of a range for the caret
-     * @param {integer} end: endindex of a range for the caret
+     * @param {integer} caretIndex: index of a range for the caret
      */
-    setCaret(start, end){
-        const contentbox = this.shadowRoot.getElementById('content');
+    setCaret(caretIndex){
+
+        let contentbox = this.shadowRoot.getElementById('content');
         contentbox.focus();
 
-        const range = new Range()
-        range.setStart( selection.focusNode, start );
-        range.setEnd( selection.focusNode, end );
+        let range = new Range()
+        let selection = window.getSelection() 
+        range.setStart( selection.focusNode, caretIndex );
+        range.setEnd( selection.focusNode, caretIndex);
     }
 
     /**
@@ -324,18 +325,22 @@ class TextEditor extends HTMLElement {
             nodeIsEmpty = selection.anchorNode.parentNode.textContent.length === 1; 
 
             if( selection.anchorNode.parentNode.nodeName === nodeName && nodeIsEmpty) {
-               console.log("t")
+                
+                let caretIndex = this.getCaret()
+
                 selection.anchorNode.parentNode.remove()
-                // this.setCaret()
+                this.setCaret(caretIndex)
+
                 return 
             }
 
             nodeIsEmpty = selection.anchorNode.textContent === ''
             if( selection.focusNode.nodeName === nodeName ) {
-                console.log("b")
+                
+                let caretIndex = this.getCaret()
 
                 selection.anchorNode.remove()
-                // this.setCaret()
+                this.setCaret(caretIndex)
             }
         }
         
