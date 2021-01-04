@@ -265,26 +265,27 @@ class TextEditor extends HTMLElement {
      * @param {integer} end: endindex of a range for the caret
      */
 
-    getCaret(start, end){
+    getCaret(){
 
-        if(start === end) return start
+        let selection = window.getSelection()
+
+        if(selection.anchorOffset === selection.focusOffset) return start
         
-        return end
+        return selection.focusOffset()
     }
 
-    setCaret(){
+    /**
+     * 
+     * @param {integer} start: startindex of a range for the caret
+     * @param {integer} end: endindex of a range for the caret
+     */
+    setCaret(start, end){
         const contentbox = this.shadowRoot.getElementById('content');
         contentbox.focus();
 
-        const selection = window.getSelection()
-        const caretIndex = this.getCaret(
-            selection.anchorOffset, 
-            selection.focusOffset
-        );
-
         const range = new Range()
-        range.setStart( selection.focusNode, caretIndex );
-        range.setEnd( selection.focusNode, caretIndex );
+        range.setStart( selection.focusNode, start );
+        range.setEnd( selection.focusNode, end );
     }
 
     /**
