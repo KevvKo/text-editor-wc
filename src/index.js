@@ -361,7 +361,6 @@ class TextEditor extends HTMLElement {
         }
     }
     
-
     /**
      * 
      * @param {string} nodeName 
@@ -370,7 +369,35 @@ class TextEditor extends HTMLElement {
      */
 
     removefilledNode(nodeName, selection, caretIndex){
-      
+
+            const selectionContent = selection.toString()
+            const selectionStart = selection.anchorOffset
+
+            let range = selection.getRangeAt(0)
+            // let newRange = this.getNewRange(selection)
+            console.log(selection)
+            // range.deleteContents()
+     
+            // selection.removeRange(range)
+            // selection.addRange(newRange)
+            
+    }
+
+    /**
+     * 
+     * @param {string} text 
+     */
+    getNewRange(selection){
+
+        let range = new Range()
+        const element = document.createElement('p')
+
+        element.innerText = selection.toString()
+        // range.insertNode(element)
+        // range.setStart(selection.anchorNode , selection.anchorOffset)
+        // range.setEnd(selection.anchorNode , selection.focusOffset)
+
+        return range
     }
 
     connectedCallback() {
