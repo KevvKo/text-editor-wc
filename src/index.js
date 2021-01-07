@@ -315,8 +315,25 @@ class TextEditor extends HTMLElement {
      * @param {String} nodeName 
      */
     removeFormatting(selection, nodeName){
+
+        let caretIndex = this.getCaret()
         
+        this.removeEmptyNode(nodeName, selection, caretIndex)
+        this.removefilledNode(nodeName, selection, caretIndex)
+        
+    }
+
+    /**
+     * 
+     * @param {string} nodeName 
+     * @param {Object} selection 
+     * @param {integer} caretIndex 
+     */
+
+    removeEmptyNode(nodeName, selection, caretIndex){
+ 
         if(selection.isCollapsed ){
+
             let nodeIsEmpty;
 
             // depend on selection, which case will be confirmed for an empty node
@@ -326,8 +343,6 @@ class TextEditor extends HTMLElement {
 
             if( selection.anchorNode.parentNode.nodeName === nodeName && nodeIsEmpty) {
                 
-                let caretIndex = this.getCaret()
-
                 selection.anchorNode.parentNode.remove()
                 this.setCaret(caretIndex)
 
@@ -337,13 +352,23 @@ class TextEditor extends HTMLElement {
             nodeIsEmpty = selection.anchorNode.textContent === ''
             if( selection.focusNode.nodeName === nodeName ) {
                 
-                let caretIndex = this.getCaret()
-
                 selection.anchorNode.remove()
                 this.setCaret(caretIndex)
+                
+                return
             }
         }
-        
+    }
+
+    /**
+     * 
+     * @param {string} nodeName 
+     * @param {object} selection 
+     * @param {integer} caretIndex 
+     */
+
+    removefilledNode(nodeName, selection, caretIndex){
+
     }
 
     connectedCallback() {
