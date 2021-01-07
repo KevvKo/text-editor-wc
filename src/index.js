@@ -144,7 +144,7 @@ class TextEditor extends HTMLElement {
         let range;
         //remove formatting
         if(boldButton.classList.contains("active")){
-            
+
             this.removeFormatting(selection, 'B')    
             this.changeClass(boldButton)
             return
@@ -270,8 +270,8 @@ class TextEditor extends HTMLElement {
         let selection = window.getSelection()
 
         if(selection.anchorOffset === selection.focusOffset) return selection.anchorOffset
-        
-        return selection.focusOffset()
+ 
+        return selection.focusOffset
     }
 
     /**
@@ -317,8 +317,12 @@ class TextEditor extends HTMLElement {
     removeFormatting(selection, nodeName){
 
         let caretIndex = this.getCaret()
-        
-        this.removeEmptyNode(nodeName, selection, caretIndex)
+        if(selection.isCollapsed ){
+
+            this.removeEmptyNode(nodeName, selection, caretIndex)
+            return
+        }
+
         this.removefilledNode(nodeName, selection, caretIndex)
         
     }
@@ -331,34 +335,32 @@ class TextEditor extends HTMLElement {
      */
 
     removeEmptyNode(nodeName, selection, caretIndex){
- 
-        if(selection.isCollapsed ){
 
-            let nodeIsEmpty;
+        let nodeIsEmpty;
 
-            // depend on selection, which case will be confirmed for an empty node
-            // length of 1, cause the zero-width character is included -> just a temporary solution, until a better workflow is implemented
+        // depend on selection, which case will be confirmed for an empty node
+        // length of 1, cause the zero-width character is included -> just a temporary solution, until a better workflow is implemented
 
-            nodeIsEmpty = selection.anchorNode.parentNode.textContent.length === 1; 
+        nodeIsEmpty = selection.anchorNode.parentNode.textContent.length === 1; 
 
-            if( selection.anchorNode.parentNode.nodeName === nodeName && nodeIsEmpty) {
-                
-                selection.anchorNode.parentNode.remove()
-                this.setCaret(caretIndex)
+        if( selection.anchorNode.parentNode.nodeName === nodeName && nodeIsEmpty) {
+            
+            selection.anchorNode.parentNode.remove()
+            this.setCaret(caretIndex)
 
-                return 
-            }
+            return 
+        }
 
-            nodeIsEmpty = selection.anchorNode.textContent === ''
-            if( selection.focusNode.nodeName === nodeName ) {
-                
-                selection.anchorNode.remove()
-                this.setCaret(caretIndex)
-                
-                return
-            }
+        nodeIsEmpty = selection.anchorNode.textContent === ''
+        if( selection.focusNode.nodeName === nodeName ) {
+            
+            selection.anchorNode.remove()
+            this.setCaret(caretIndex)
+            
+            return
         }
     }
+    
 
     /**
      * 
@@ -368,7 +370,7 @@ class TextEditor extends HTMLElement {
      */
 
     removefilledNode(nodeName, selection, caretIndex){
-
+      
     }
 
     connectedCallback() {
