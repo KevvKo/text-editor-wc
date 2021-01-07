@@ -323,7 +323,7 @@ class TextEditor extends HTMLElement {
             return
         }
 
-        this.removefilledNode(nodeName, selection, caretIndex)
+        this.removeSurroundingNode( selection )
         
     }
 
@@ -363,41 +363,19 @@ class TextEditor extends HTMLElement {
     
     /**
      * 
-     * @param {string} nodeName 
      * @param {object} selection 
-     * @param {integer} caretIndex 
      */
 
-    removefilledNode(nodeName, selection, caretIndex){
+    removeSurroundingNode( selection ){
 
-            const selectionContent = selection.toString()
-            const selectionStart = selection.anchorOffset
+        const selectionContent = selection.toString()
+        let range = selection.getRangeAt(0)
+        let element = document.createElement('p')
 
-            let range = selection.getRangeAt(0)
-            // let newRange = this.getNewRange(selection)
-            console.log(selection)
-            // range.deleteContents()
-     
-            // selection.removeRange(range)
-            // selection.addRange(newRange)
-            
-    }
+        element.innerHTML = selectionContent
 
-    /**
-     * 
-     * @param {string} text 
-     */
-    getNewRange(selection){
-
-        let range = new Range()
-        const element = document.createElement('p')
-
-        element.innerText = selection.toString()
-        // range.insertNode(element)
-        // range.setStart(selection.anchorNode , selection.anchorOffset)
-        // range.setEnd(selection.anchorNode , selection.focusOffset)
-
-        return range
+        range.deleteContents()
+        range.insertNode(element)            
     }
 
     connectedCallback() {
