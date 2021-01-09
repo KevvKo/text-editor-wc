@@ -107,6 +107,7 @@ class TextEditor extends HTMLElement {
         orderedButton.appendChild(imageOrderedList);
 
         template.appendChild(textbox);
+        this.setCurrentNode(textbox)
     }
 
     /**
@@ -147,6 +148,8 @@ class TextEditor extends HTMLElement {
 
             this.removeFormatting(selection, 'B')    
             this.changeClass(boldButton)
+            this.setCurrentNode(element)
+
             return
         }
 
@@ -155,7 +158,9 @@ class TextEditor extends HTMLElement {
         if(selection.type === 'Caret' && selection.isCollapsed){
 
             this.insertElement(element, selection, range)
+            this.setCurrentNode(element)
             element.focus()
+
             return
         }
 
@@ -164,6 +169,7 @@ class TextEditor extends HTMLElement {
 
             range = selection.getRangeAt(0)
             range.surroundContents(element)
+            this.setCurrentNode(element)
         }
     }
 
@@ -182,6 +188,8 @@ class TextEditor extends HTMLElement {
             
             this.removeFormatting(selection, 'I')    
             this.changeClass(italicButton)
+            this.setCurrentNode(element)
+
             return
         }
 
@@ -191,6 +199,8 @@ class TextEditor extends HTMLElement {
         if(selection.type === 'Caret' && selection.isCollapsed){
 
             this.insertElement(element, selection, range)
+            this.setCurrentNode(element)
+
             return
         }
 
@@ -199,6 +209,8 @@ class TextEditor extends HTMLElement {
 
             range = selection.getRangeAt(0)
             range.surroundContents(element)
+            this.setCurrentNode(element)
+
         }
     }
 
@@ -217,6 +229,8 @@ class TextEditor extends HTMLElement {
             
             this.removeFormatting(selection, 'U')    
             this.changeClass(underlinedButton)
+            this.setCurrentNode(element)
+
             return
         }
 
@@ -226,6 +240,9 @@ class TextEditor extends HTMLElement {
         if(selection.type === 'Caret' && selection.isCollapsed){
 
             this.insertElement(element, selection, range)
+            this.setCurrentNode(element)
+            this.setCurrentNode(element)
+
             return
         }
 
@@ -234,6 +251,8 @@ class TextEditor extends HTMLElement {
 
             range = selection.getRangeAt(0)
             range.surroundContents(element)
+            this.setCurrentNode(element)
+
         }
     }
 
@@ -378,14 +397,60 @@ class TextEditor extends HTMLElement {
         range.insertNode(element)            
     }
 
+    getSurroundingNode(){
+
+        const selection = window.getSelection()
+        return selection.anchorNode.parentNode
+    }
+
+    detectFormatting(){
+
+        const node = this.getSurroundingNode()
+        const formattingNodes = ['B', 'I', 'U']
+
+        if( formattingNodes.includes(this.currentNode.nodeName) && this.currentNode.nodeName !== node.nodeName){
+            
+            if(this.currentNode.nodeName === 'B'){
+                
+                const boldButton = this.shadowRoot.getElementById('bold')
+                this.removeActiveState(boldButton)
+                this-this.setCurrentNode(node)
+                return
+            }
+        }
+
+        if( formattingNodes.includes(node.nodeName) && this.currentNode.nodeName !== node.nodeName ){
+            
+            if(node.nodeName === 'B'){
+                
+                const boldButton = this.shadowRoot.getElementById('bold')
+                this.changeClass(boldButton)
+                this.setCurrentNode(node)
+                return 
+            }
+        }
+        
+        if(formattingNodes.includes(node.nodeName)){
+            this.setCurrentNode(node)
+        }
+    }
+
+    /**
+     * 
+     * @param {object} node 
+     */
+    setCurrentNode(node){
+        this.currentNode = node
+    }
+
     connectedCallback() {
         
         this.shadowRoot.getElementById('content').addEventListener('click', () => {
-
+            this.detectFormatting()
         })
 
         this.shadowRoot.getElementById('content').addEventListener('keydown', () => {
-   
+            this.detectFormatting()
         })
     }
 }
