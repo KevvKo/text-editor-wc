@@ -115,7 +115,7 @@ class TextEditor extends HTMLElement {
      * @param {button} button: a button element from the toolbox 
      */
 
-    changeClass(button){
+    toggleActiveState(button){
         if(button.classList.contains('active')){
             button.classList.remove('active')
         }else{
@@ -147,13 +147,13 @@ class TextEditor extends HTMLElement {
         if(boldButton.classList.contains("active")){
 
             this.removeFormatting(selection, 'B')    
-            this.changeClass(boldButton)
+            this.toggleActiveState(boldButton)
             this.setCurrentNode(element)
 
             return
         }
 
-        this.changeClass(boldButton)
+        this.toggleActiveState(boldButton)
 
         if(selection.type === 'Caret' && selection.isCollapsed){
 
@@ -187,13 +187,13 @@ class TextEditor extends HTMLElement {
         if(italicButton.classList.contains("active")){
             
             this.removeFormatting(selection, 'I')    
-            this.changeClass(italicButton)
+            this.toggleActiveState(italicButton)
             this.setCurrentNode(element)
 
             return
         }
 
-        this.changeClass(italicButton)
+        this.toggleActiveState(italicButton)
 
         // insert an emtpy node
         if(selection.type === 'Caret' && selection.isCollapsed){
@@ -228,13 +228,13 @@ class TextEditor extends HTMLElement {
         if(underlinedButton.classList.contains("active")){
             
             this.removeFormatting(selection, 'U')    
-            this.changeClass(underlinedButton)
+            this.toggleActiveState(underlinedButton)
             this.setCurrentNode(element)
 
             return
         }
 
-        this.changeClass(underlinedButton)
+        this.toggleActiveState(underlinedButton)
 
         // insert an emtpy node
         if(selection.type === 'Caret' && selection.isCollapsed){
@@ -263,7 +263,7 @@ class TextEditor extends HTMLElement {
      */
 
     formatUnorderedList(unorderedButton, orderedButton){
-        this.changeClass(unorderedButton)
+        this.toggleActiveState(unorderedButton)
         this.removeActiveState(orderedButton)
     }
 
@@ -274,7 +274,7 @@ class TextEditor extends HTMLElement {
      */
 
     formatOrderedList(orderedButton, unorderedButton){
-        this.changeClass(orderedButton)
+        this.toggleActiveState(orderedButton)
         this.removeActiveState(unorderedButton)
     }
 
@@ -424,7 +424,7 @@ class TextEditor extends HTMLElement {
             if(node.nodeName === 'B'){
                 
                 const boldButton = this.shadowRoot.getElementById('bold')
-                this.changeClass(boldButton)
+                this.toggleActiveState(boldButton)
                 this.setCurrentNode(node)
                 return 
             }
