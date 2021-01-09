@@ -134,26 +134,29 @@ class TextEditor extends HTMLElement {
         }
     }
 
-    /*
-        boldButton: button - button to format text bold
-    */
+    /**
+     * 
+     * @param {String} elementName 
+     * @param {String} tagName 
+     * @param {Object} button
+     */
 
-    formatBold(boldButton){
+    format(elementName, tagName, button){
 
         let selection = window.getSelection()
-        let element = document.createElement('b')
+        let element = document.createElement(elementName)
         let range;
         //remove formatting
-        if(boldButton.classList.contains("active")){
+        if(button.classList.contains("active")){
 
-            this.removeFormatting(selection, 'B')    
-            this.toggleActiveState(boldButton)
+            this.removeFormatting(selection, tagName)    
+            this.toggleActiveState(button)
             this.setCurrentNode(element)
 
             return
         }
 
-        this.toggleActiveState(boldButton)
+        this.toggleActiveState(button)
 
         if(selection.type === 'Caret' && selection.isCollapsed){
 
@@ -173,45 +176,21 @@ class TextEditor extends HTMLElement {
         }
     }
 
+    /*
+        boldButton: button - button to format text bold
+    */
+
+    formatBold(boldButton){
+        this.format('b', 'B', boldButton)
+    }
+
     /**
      * 
      * @param {button} italicButton: button to format text italic
      */
 
     formatItalic(italicButton){
-
-        let selection = window.getSelection()
-        let element = document.createElement('i')
-        let range;
-
-        if(italicButton.classList.contains("active")){
-            
-            this.removeFormatting(selection, 'I')    
-            this.toggleActiveState(italicButton)
-            this.setCurrentNode(element)
-
-            return
-        }
-
-        this.toggleActiveState(italicButton)
-
-        // insert an emtpy node
-        if(selection.type === 'Caret' && selection.isCollapsed){
-
-            this.insertElement(element, selection, range)
-            this.setCurrentNode(element)
-
-            return
-        }
-
-        // surround the selected content
-        if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
-
-            range = selection.getRangeAt(0)
-            range.surroundContents(element)
-            this.setCurrentNode(element)
-
-        }
+        this.format('i', 'I', italicButton)
     }
 
     /**
@@ -220,40 +199,7 @@ class TextEditor extends HTMLElement {
      */
 
     formatUnderlined(underlinedButton){
-
-        let selection = window.getSelection()
-        let element = document.createElement('u')
-        let range;
-
-        if(underlinedButton.classList.contains("active")){
-            
-            this.removeFormatting(selection, 'U')    
-            this.toggleActiveState(underlinedButton)
-            this.setCurrentNode(element)
-
-            return
-        }
-
-        this.toggleActiveState(underlinedButton)
-
-        // insert an emtpy node
-        if(selection.type === 'Caret' && selection.isCollapsed){
-
-            this.insertElement(element, selection, range)
-            this.setCurrentNode(element)
-            this.setCurrentNode(element)
-
-            return
-        }
-
-        // surround the selected content
-        if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
-
-            range = selection.getRangeAt(0)
-            range.surroundContents(element)
-            this.setCurrentNode(element)
-
-        }
+        this.format('u', 'U', underlinedButton)
     }
 
     /**
