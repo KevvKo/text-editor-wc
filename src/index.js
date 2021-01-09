@@ -160,7 +160,24 @@ class TextEditor extends HTMLElement {
 
         if(selection.type === 'Caret' && selection.isCollapsed){
 
-            this.insertElement(element, selection, range)
+            const box = this.shadowRoot.getElementById('content')
+
+            if(!box.contains(selection.anchorNode)){
+
+                const range = document.createRange()
+                
+                range.setStart(box, 0)
+                range.setEnd(box, 0)
+
+                selection.removeAllRanges()
+                selection.addRange(range)
+
+                this.insertElement(element, selection)
+
+            }else{
+                this.insertElement(element, selection)
+            }
+
             this.setCurrentNode(element)
             element.focus()
 
@@ -261,10 +278,12 @@ class TextEditor extends HTMLElement {
      * @param {object} range 
      */
 
-    insertElement(element, selection, range){
+    insertElement( element, selection ){
+        
+        const range = selection.getRangeAt(0)
 
         element.innerHTML = '&#8203;';
-        range = selection.getRangeAt(0)
+
         range.setStart(selection.anchorNode, selection.anchorOffset)
         range.setEnd(selection.focusNode, selection.focusOffset)
         range.insertNode(element)
