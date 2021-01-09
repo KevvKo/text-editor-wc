@@ -370,7 +370,7 @@ class TextEditor extends HTMLElement {
 
         const selectionContent = selection.toString()
         let range = selection.getRangeAt(0)
-        let element = document.createElement('p')
+        let element = document.createTextNode(selectionContent)
 
         element.innerHTML = selectionContent
 
