@@ -307,7 +307,7 @@ class TextEditor extends HTMLElement {
             return
         }
 
-        this.removeSurroundingNode( selection )
+        this.removeSurroundingNode( selection, nodeName )
         
     }
 
@@ -350,16 +350,32 @@ class TextEditor extends HTMLElement {
      * @param {object} selection 
      */
 
-    removeSurroundingNode( selection ){
+    removeSurroundingNode( selection, nodeName ){
 
         const selectionContent = selection.toString()
-        let range = selection.getRangeAt(0)
+        const parentNode = selection.anchorNode.parentNode
+        let range = document.createRange()
         let element = document.createTextNode(selectionContent)
 
         element.innerHTML = selectionContent
 
-        range.deleteContents()
-        range.insertNode(element)            
+        // case if the surrounding node is a parentnode
+        if(parentNode.nodeName === nodeName){       
+
+            parentNode.parentNode.insertBefore(element, parentNode)
+            parentNode.remove()
+
+            selection.deleteFromDocument()
+            selection.removeAllRanges()
+
+            range.setStart(element, 0)
+            range.setEnd(element, selectionContent.length)
+
+            selection.addRange(range)
+            selection.extend(element, selectionContent.length )
+
+            return
+        }
     }
 
     getSurroundingNode(){
