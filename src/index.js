@@ -376,6 +376,26 @@ class TextEditor extends HTMLElement {
 
             return
         }
+
+        const anchorNode = selection.anchorNode
+
+        anchorNode.childNodes.forEach( (node) => {
+            
+            if(node.nodeName === nodeName){
+
+                anchorNode.insertBefore(element, node)
+                node.remove()
+                                
+                range.setStart(element, 0)
+                range.setEnd(element, selectionContent.length)
+                
+                selection.addRange(range)
+                selection.extend(element, selectionContent.length )
+
+                return
+            }
+        })
+
     }
 
     getSurroundingNode(){
