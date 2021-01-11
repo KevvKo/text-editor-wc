@@ -371,9 +371,6 @@ class TextEditor extends HTMLElement {
             range.setStart(element, 0)
             range.setEnd(element, selectionContent.length)
 
-            selection.addRange(range)
-            selection.extend(element, selectionContent.length )
-
             return
         }
 
@@ -382,16 +379,13 @@ class TextEditor extends HTMLElement {
         anchorNode.childNodes.forEach( (node) => {
             
             if(node.nodeName === nodeName){
-
+                console.log(anchorNode)
                 anchorNode.insertBefore(element, node)
                 node.remove()
                                 
                 range.setStart(element, 0)
                 range.setEnd(element, selectionContent.length)
-                
-                selection.addRange(range)
-                selection.extend(element, selectionContent.length )
-
+            
                 return
             }
         })
