@@ -30,23 +30,23 @@ class TextEditor extends HTMLElement {
         textbox.setAttribute('contentEditable', true);
 
         //create the spans and buttons 
-        const boldButton = document.createElement('span');
+        const boldButton = document.createElement('div');
         boldButton.id = 'bold'
         boldButton.setAttribute('class', 'toolbox-button');
 
-        const italicButton = document.createElement('span');
+        const italicButton = document.createElement('div');
         italicButton.id = 'italic'
         italicButton.setAttribute('class', 'toolbox-button');
 
-        const underlinedButton = document.createElement('span');
+        const underlinedButton = document.createElement('div');
         underlinedButton.id = 'underlined'
         underlinedButton.setAttribute('class', 'toolbox-button');
 
-        const unorderedButton = document.createElement('span');
+        const unorderedButton = document.createElement('div');
         unorderedButton.id = 'unorderedList'
         unorderedButton.setAttribute('class', 'toolbox-button');
 
-        const orderedButton = document.createElement('span');
+        const orderedButton = document.createElement('div');
         orderedButton.id = 'orderedList'
         orderedButton.setAttribute('class', 'toolbox-button');
 

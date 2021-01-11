@@ -11,8 +11,7 @@ export const style = `
 
 .toolbox-button{
     display: inline-block;
-    padding: 2px;
-    margin: 4px;
+    padding: 4px;
     border-radius: 3px;
 }
 
