@@ -7,10 +7,10 @@ import image5 from './assets/img/format_list_bulleted-black-24dp.svg';
 import {style} from './assets/js/style'
 
 /**
- @todo function to remove formatting
+ @todo after removing a surrounded node, selelection is sometimes wrong set
  @todo implementation for dynamically formatting across multiple differenct nodes
  @todo implementation format functions ordered-/unordered list
- @todo css-adjustments for toolbox
+
  */
 class TextEditor extends HTMLElement {
 
@@ -406,34 +406,34 @@ class TextEditor extends HTMLElement {
 
     detectFormatting(){
 
-        const node = this.getSurroundingNode()
-        const formattingNodes = ['B', 'I', 'U']
+        // const node = this.getSurroundingNode()
+        // const formattingNodes = ['B', 'I', 'U']
 
-        if( formattingNodes.includes(this.currentNode.nodeName) && this.currentNode.nodeName !== node.nodeName){
+        // if( formattingNodes.includes(this.currentNode.nodeName) && this.currentNode.nodeName !== node.nodeName){
             
-            if(this.currentNode.nodeName === 'B'){
+        //     if(this.currentNode.nodeName === 'B'){
                 
-                const boldButton = this.shadowRoot.getElementById('bold')
-                this.removeActiveState(boldButton)
-                this-this.setCurrentNode(node)
-                return
-            }
-        }
+        //         const boldButton = this.shadowRoot.getElementById('bold')
+        //         this.removeActiveState(boldButton)
+        //         this.setCurrentNode(node)
+        //         return
+        //     }
+        // }
 
-        if( formattingNodes.includes(node.nodeName) && this.currentNode.nodeName !== node.nodeName ){
+        // if( formattingNodes.includes(node.nodeName) && this.currentNode.nodeName !== node.nodeName ){
             
-            if(node.nodeName === 'B'){
+        //     if(node.nodeName === 'B'){
                 
-                const boldButton = this.shadowRoot.getElementById('bold')
-                this.toggleActiveState(boldButton)
-                this.setCurrentNode(node)
-                return 
-            }
-        }
+        //         const boldButton = this.shadowRoot.getElementById('bold')
+        //         this.toggleActiveState(boldButton)
+        //         this.setCurrentNode(node)
+        //         return 
+        //     }
+        // }
         
-        if(formattingNodes.includes(node.nodeName)){
-            this.setCurrentNode(node)
-        }
+        // if(formattingNodes.includes(node.nodeName)){
+        //     this.setCurrentNode(node)
+        // }
     }
 
     /**
