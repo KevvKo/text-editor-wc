@@ -29,6 +29,12 @@ class TextEditor extends HTMLElement {
         textbox.setAttribute('id', 'content');
         textbox.setAttribute('contentEditable', true);
 
+        const toolboxSection1 = document.createElement('div')
+        toolboxSection1.className = 'toolbox-section' 
+
+        const toolboxSection2 = document.createElement('div')
+        toolboxSection2.className = 'toolbox-section' 
+
         //create the spans and buttons 
         const boldButton = document.createElement('div');
         boldButton.id = 'bold'
@@ -94,11 +100,15 @@ class TextEditor extends HTMLElement {
 
         template.appendChild(toolbox);
 
-        toolbox.appendChild(boldButton);
-        toolbox.appendChild(italicButton);
-        toolbox.appendChild(underlinedButton);
-        toolbox.appendChild(unorderedButton);
-        toolbox.appendChild(orderedButton);
+        toolbox.appendChild(toolboxSection1)
+        toolbox.appendChild(toolboxSection2)
+
+        toolboxSection1.appendChild(boldButton);
+        toolboxSection1.appendChild(italicButton);
+        toolboxSection1.appendChild(underlinedButton);
+
+        toolboxSection2.appendChild(unorderedButton);
+        toolboxSection2.appendChild(orderedButton);
 
         boldButton.appendChild(imageBold);
         italicButton.appendChild(imageItalic);

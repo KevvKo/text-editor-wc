@@ -9,9 +9,23 @@ export const style = `
     border: 1px solid #A8A8A8; 
 }
 
+#toolbox{
+    display: flex;
+}
+
+.toolbox-section{
+    width: max-content;
+    margin: 3px;
+}
+
+.toolbox-section:first-child{
+    border-right: 1px solid #A8A8A8; 
+}
+
+
 .toolbox-button{
     display: inline-block;
-    padding: 4px;
+    padding: 2px;
     border-radius: 3px;
 }
 
@@ -31,8 +45,6 @@ export const style = `
 
 #underlined{
     padding-right: 4px;
-    margin-right: 0;
-    border-right: 1px solid #A8A8A8;
 }
 
 #content{ 
