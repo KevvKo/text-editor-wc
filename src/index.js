@@ -375,11 +375,11 @@ class TextEditor extends HTMLElement {
             parentNode.parentNode.insertBefore(element, parentNode)
             parentNode.remove()
 
-            selection.deleteFromDocument()
-            selection.removeAllRanges()
-
             range.setStart(element, 0)
             range.setEnd(element, selectionContent.length)
+            
+            selection.removeAllRanges()
+            selection.addRange(range)
 
             return
         }
@@ -389,14 +389,9 @@ class TextEditor extends HTMLElement {
         anchorNode.childNodes.forEach( (node) => {
             
             if(node.nodeName === nodeName){
-                console.log(anchorNode)
+
                 anchorNode.insertBefore(element, node)
                 node.remove()
-                                
-                range.setStart(element, 0)
-                range.setEnd(element, selectionContent.length)
-            
-                return
             }
         })
 
