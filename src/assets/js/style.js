@@ -11,11 +11,12 @@ export const style = `
 
 #toolbox{
     display: flex;
+    margin: 2px;
 }
 
 .toolbox-section{
     width: max-content;
-    margin: 3px;
+    padding: 3px;
 }
 
 .toolbox-section:first-child{
@@ -44,7 +45,7 @@ export const style = `
 }
 
 #underlined{
-    padding-right: 4px;
+
 }
 
 #content{ 
