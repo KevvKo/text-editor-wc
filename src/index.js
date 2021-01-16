@@ -283,6 +283,23 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
+     * @param {Object} node
+     * @param (Object) selection 
+     */
+    setCaretAfterNode(node, selection){
+        
+        const range = selection.getRangeAt(0)
+
+        range.setStartAfter(node)
+        range.setEndAfter(node)
+
+        selection.removeAllRanges()
+        selection.addRange(range)
+
+    }
+
+    /**
+     * 
      * @param {node} element  - a formatting node element ( <b>, <i>, <u>,---)
      * @param {object} selection 
      * @param {object} range 
@@ -300,7 +317,6 @@ class TextEditor extends HTMLElement {
 
         range.setStart(element, 0)
         range.setEnd(element, 0)
-        //element.focus()
     }
 
     /**
@@ -311,10 +327,20 @@ class TextEditor extends HTMLElement {
     removeFormatting(selection, nodeName){
 
         let caretIndex = this.getCaret()
-        if(selection.isCollapsed ){
 
-            this.removeEmptyNode(nodeName, selection, caretIndex)
+        if(selection.isCollapsed){
+
+            if(selection.anchorOffset === selection.focusOffset && selection.anchorOffset === 0 ){
+                
+                this.removeEmptyNode(nodeName, selection, caretIndex)
+                return
+            }
+
+            const node = selection.anchorNode.parentNode
+
+            this.setCaretAfterNode(node, selection)
             return
+
         }
 
         this.removeSurroundingNode( selection, nodeName )
