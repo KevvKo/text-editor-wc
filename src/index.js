@@ -336,11 +336,14 @@ class TextEditor extends HTMLElement {
                 return
             }
 
-            const node = selection.anchorNode.parentNode
+            if(selection.anchorOffset === selection.anchorNode.length-1){
 
-            this.setCaretAfterNode(node, selection)
+                const node = selection.anchorNode.parentNode
+                this.setCaretAfterNode(node, selection)
+                return
+            }
+            
             return
-
         }
 
         this.removeSurroundingNode( selection, nodeName )
