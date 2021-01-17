@@ -7,8 +7,7 @@ import image5 from './assets/img/format_list_bulleted-black-24dp.svg';
 import {style} from './assets/js/style'
 
 /**
- @todo after removing a surrounded node, selelection is sometimes wrong set
- @todo implementation for dynamically formatting across multiple differenct nodes
+@todo implementation for dynamically formatting across multiple differenct nodes
  @todo implementation format functions ordered-/unordered list
 
  */
@@ -343,6 +342,9 @@ class TextEditor extends HTMLElement {
                 return
             }
             
+            const node = selection.anchorNode.parentNode
+            
+            this.insertTextNode(selection, nodeName, caretIndex)
             return
         }
 
@@ -470,6 +472,50 @@ class TextEditor extends HTMLElement {
      */
     setCurrentNode(node){
         this.currentNode = node
+    }
+
+    /**
+     * 
+     * @param {*} selection 
+     * @param {*} nodeName 
+     * @param {*} caretIndex 
+     */
+
+    insertTextNode(selection, nodeName, caretIndex){
+        
+        const parentNode = selection.anchorNode.parentNode.parentNode
+        const editableNode = selection.anchorNode.parentNode
+        const range = selection.getRangeAt(0)
+        const content = selection.anchorNode.textContent
+        const frontContent = content.substring(0, caretIndex)
+        const backContent = content.substring(caretIndex, content.length)
+
+        const frontNode = document.createElement(nodeName.toLowerCase())
+        frontNode.innerText = frontContent
+
+        const backNode = document.createElement(nodeName.toLowerCase())
+        backNode.innerText = backContent
+
+        if(!editableNode.previousSibling){
+
+            parentNode.appendChild(frontNode)
+            parentNode.appendChild(backNode)
+
+        } else{
+
+            const sibling = editableNode.previousSibling
+
+            sibling.after(frontNode)
+            frontNode.after(backNode)
+        }
+
+        range.setStartAfter(frontNode)
+        range.setEndBefore(backNode)
+
+        selection.removeAllRanges()
+        selection.addRange(range)
+
+        editableNode.remove()
     }
 
     connectedCallback() {
