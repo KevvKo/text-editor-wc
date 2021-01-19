@@ -195,10 +195,33 @@ class TextEditor extends HTMLElement {
 
         // surround the selected content
         if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
-
+            
             range = selection.getRangeAt(0)
-            range.surroundContents(element)
-            this.setCurrentNode(element)
+
+            if(range.startOffset === 0){
+
+                const content = range.cloneContents()
+                const startContainer = range.startContainer
+                const endContainer = range.endContainer
+    
+                let node = document.createElement(tagName)
+                node.appendChild(content)
+       
+                const parentNode = this.getEqualParentNode(startContainer, endContainer)
+
+                if(parentNode.isEqualNode(startContainer.parentNode)){
+                    parentNode.insertBefore(node, startContainer)
+                } else{
+                    parentNode.insertBefore(node, startContainer.parentNode)
+                }
+
+                range.deleteContents()
+                range.setStartBefore(node)
+                range.setEndAfter(node)
+                
+                selection.removeAllRanges()
+                selection.addRange(range)
+            }
         }
     }
 
@@ -432,6 +455,28 @@ class TextEditor extends HTMLElement {
 
         const selection = window.getSelection()
         return selection.anchorNode.parentNode
+    }
+
+    /**
+     * 
+     * @param {Object} node1 
+     * @param {Object} node2 
+     */
+    getEqualParentNode(node1, node2){
+
+        const rootNode = this.shadowRoot.getElementById('content')
+        let parentNode = node1.parentNode
+
+        while( !parentNode.isEqualNode(node2.parentNode) ){
+
+            if(parentNode.isEqualNode(rootNode)){
+                return rootNode
+            }
+
+            parentNode = parentNode.parentNode
+        }
+ 
+        return parentNode
     }
 
     detectFormatting(){
