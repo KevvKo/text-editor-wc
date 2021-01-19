@@ -195,33 +195,8 @@ class TextEditor extends HTMLElement {
 
         // surround the selected content
         if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
-            
-            range = selection.getRangeAt(0)
-
-            if(range.startOffset === 0){
-
-                const content = range.cloneContents()
-                const startContainer = range.startContainer
-                const endContainer = range.endContainer
-    
-                let node = document.createElement(tagName)
-                node.appendChild(content)
-       
-                const parentNode = this.getEqualParentNode(startContainer, endContainer)
-
-                if(parentNode.isEqualNode(startContainer.parentNode)){
-                    parentNode.insertBefore(node, startContainer)
-                } else{
-                    parentNode.insertBefore(node, startContainer.parentNode)
-                }
-
-                range.deleteContents()
-                range.setStartBefore(node)
-                range.setEndAfter(node)
-                
-                selection.removeAllRanges()
-                selection.addRange(range)
-            }
+           
+            this.surroundMultipleNodes(selection, tagName)
         }
     }
 
@@ -339,6 +314,41 @@ class TextEditor extends HTMLElement {
 
         range.setStart(element, 0)
         range.setEnd(element, 0)
+    }
+
+    /**
+     * 
+     * @param {Object} selection 
+     * @param {Object} tagName 
+     */
+    surroundMultipleNodes(selection, tagName){
+
+        const range = selection.getRangeAt(0)
+
+        if(range.startOffset === 0){
+
+            const content = range.cloneContents()
+            const startContainer = range.startContainer
+            const endContainer = range.endContainer
+
+            let node = document.createElement(tagName)
+            node.appendChild(content)
+   
+            const parentNode = this.getEqualParentNode(startContainer, endContainer)
+
+            if(parentNode.isEqualNode(startContainer.parentNode)){
+                parentNode.insertBefore(node, startContainer)
+            } else{
+                parentNode.insertBefore(node, startContainer.parentNode)
+            }
+
+            range.deleteContents()
+            range.setStartBefore(node)
+            range.setEndAfter(node)
+
+            selection.removeAllRanges()
+            selection.addRange(range)
+        }
     }
 
     /**
