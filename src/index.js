@@ -324,12 +324,11 @@ class TextEditor extends HTMLElement {
     surroundMultipleNodes(selection, tagName){
 
         const range = selection.getRangeAt(0)
+        const content = range.cloneContents()
+        const startContainer = range.startContainer
+        const endContainer = range.endContainer
 
         if(range.startOffset === 0){
-
-            const content = range.cloneContents()
-            const startContainer = range.startContainer
-            const endContainer = range.endContainer
 
             let node = document.createElement(tagName)
             node.appendChild(content)
@@ -338,18 +337,23 @@ class TextEditor extends HTMLElement {
 
             if(parentNode.isEqualNode(startContainer.parentNode)){
                 parentNode.insertBefore(node, startContainer)
+                this.removeNodesInRange(range, startContainer)
+
             } else{
                 parentNode.insertBefore(node, startContainer.parentNode)
+                this.removeNodesInRange(range, startContainer.parentNode)
             }
 
-            range.deleteContents()
-            range.setStartBefore(node)
-            range.setEndAfter(node)
+            const newRange = document.createRange()
+
+            newRange.setStartBefore(node)
+            newRange.setEndAfter(node)
 
             selection.removeAllRanges()
-            selection.addRange(range)
+            selection.addRange(newRange)
         }
     }
+
 
     /**
      * 
@@ -385,6 +389,25 @@ class TextEditor extends HTMLElement {
         
     }
 
+    /**
+     * 
+     * @param {Object} range 
+     * @param (Object) startNode
+     */
+    removeNodesInRange(range, startNode){
+
+        const startContainer = range.startContainer
+        const endNode = range.endContainer
+        const parentNode = this.getEqualParentNode(startNode, endNode)
+        const childNodes = Array.prototype.slice.call(parentNode.childNodes)
+        let i = Array.prototype.indexOf.call(childNodes, startNode)
+
+        const removableNodes = childNodes.slice(i)
+
+        removableNodes.forEach( node => {
+            node.remove()
+        })
+    }
     /**
      * 
      * @param {string} nodeName 
