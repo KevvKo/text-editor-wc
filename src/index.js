@@ -116,7 +116,6 @@ class TextEditor extends HTMLElement {
         orderedButton.appendChild(imageOrderedList);
 
         template.appendChild(textbox);
-        this.setCurrentNode(textbox)
     }
 
     /**
@@ -160,7 +159,6 @@ class TextEditor extends HTMLElement {
 
             this.removeFormatting(selection, tagName)    
             this.toggleActiveState(button)
-            this.setCurrentNode(element)
 
             return
         }
@@ -187,7 +185,6 @@ class TextEditor extends HTMLElement {
                 this.insertElement(element, selection)
             }
 
-            this.setCurrentNode(element)
             element.focus()
 
             return
@@ -453,7 +450,6 @@ class TextEditor extends HTMLElement {
         const parentNode = selection.anchorNode.parentNode
         let range = document.createRange()
         let element = document.createTextNode(selectionContent)
-
         element.innerHTML = selectionContent
 
         // case if the surrounding node is a parentnode
@@ -512,46 +508,6 @@ class TextEditor extends HTMLElement {
         return parentNode
     }
 
-    detectFormatting(){
-
-        // const node = this.getSurroundingNode()
-        // const formattingNodes = ['B', 'I', 'U']
-
-        // if( formattingNodes.includes(this.currentNode.nodeName) && this.currentNode.nodeName !== node.nodeName){
-            
-        //     if(this.currentNode.nodeName === 'B'){
-                
-        //         const boldButton = this.shadowRoot.getElementById('bold')
-        //         this.removeActiveState(boldButton)
-        //         this.setCurrentNode(node)
-        //         return
-        //     }
-        // }
-
-        // if( formattingNodes.includes(node.nodeName) && this.currentNode.nodeName !== node.nodeName ){
-            
-        //     if(node.nodeName === 'B'){
-                
-        //         const boldButton = this.shadowRoot.getElementById('bold')
-        //         this.toggleActiveState(boldButton)
-        //         this.setCurrentNode(node)
-        //         return 
-        //     }
-        // }
-        
-        // if(formattingNodes.includes(node.nodeName)){
-        //     this.setCurrentNode(node)
-        // }
-    }
-
-    /**
-     * 
-     * @param {object} node 
-     */
-    setCurrentNode(node){
-        this.currentNode = node
-    }
-
     /**
      * 
      * @param {*} selection 
@@ -599,11 +555,9 @@ class TextEditor extends HTMLElement {
     connectedCallback() {
         
         this.shadowRoot.getElementById('content').addEventListener('click', () => {
-            this.detectFormatting()
         })
 
         this.shadowRoot.getElementById('content').addEventListener('keydown', () => {
-            this.detectFormatting()
         })
     }
 }
