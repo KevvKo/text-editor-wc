@@ -449,31 +449,35 @@ class TextEditor extends HTMLElement {
         const selectionContent = selection.toString()
         const parentNode = selection.anchorNode.parentNode
         let range = document.createRange()
-        let element = document.createTextNode(selectionContent)
-        element.innerHTML = selectionContent
+        let content = selection.getRangeAt(0).cloneContents()
 
         // case if the surrounding node is a parentnode
         if(parentNode.nodeName === nodeName){       
-
-            parentNode.parentNode.insertBefore(element, parentNode)
+        
+            parentNode.parentNode.insertBefore(content, parentNode)
             parentNode.remove()
-
-            range.setStart(element, 0)
-            range.setEnd(element, selectionContent.length)
             
-            selection.removeAllRanges()
-            selection.addRange(range)
-
             return
         }
 
         const anchorNode = selection.anchorNode
 
+        // to find the correct node for removiing 
         anchorNode.childNodes.forEach( (node) => {
-            
+
             if(node.nodeName === nodeName){
 
-                anchorNode.insertBefore(element, node)
+                const childNodes = Array.from( content.firstChild.childNodes )
+                
+                if(node.isEqualNode( content.firstChild)){ // for the case, the document fragment contains the to removable node 
+
+                    childNodes.forEach( childNode => {
+
+                        anchorNode.insertBefore(childNode, node)
+                    
+                    })
+                }
+            
                 node.remove()
             }
         })
