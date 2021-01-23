@@ -55,8 +55,9 @@ class TextEditor extends HTMLElement {
         orderedButton.id = 'orderedList'
         orderedButton.setAttribute('class', 'toolbox-button');
 
-        // add all functions to the format buttons
-
+        const row = document.createElement('p')
+        row.innerHTML = '&#8203;';
+        
         boldButton.addEventListener('click', () => {
             this.formatBold(boldButton)
         })
@@ -116,6 +117,8 @@ class TextEditor extends HTMLElement {
         orderedButton.appendChild(imageOrderedList);
 
         template.appendChild(textbox);
+        textbox.appendChild(row)
+        
     }
 
     /**

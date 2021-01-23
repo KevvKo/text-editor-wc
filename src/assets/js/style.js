@@ -56,5 +56,10 @@ export const style = `
     word-break: break-all;
     resize: none;
 }
+
+#content p{
+    margin: 4px;
+}
+
 </style>
 `
