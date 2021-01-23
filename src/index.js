@@ -56,7 +56,11 @@ class TextEditor extends HTMLElement {
         orderedButton.setAttribute('class', 'toolbox-button');
 
         const row = document.createElement('p')
-        row.innerHTML = '&#8203;';
+        row.innerHTML = '&#8203';
+
+        textbox.addEventListener('keydown', (e) => {
+            this.preventDelete(e)
+        })
         
         boldButton.addEventListener('click', () => {
             this.formatBold(boldButton)
@@ -119,6 +123,44 @@ class TextEditor extends HTMLElement {
         template.appendChild(textbox);
         textbox.appendChild(row)
         
+    }
+
+    /**
+     * 
+     * @param {object} e 
+     */
+    preventDelete(e){
+        
+        const selection = window.getSelection()
+
+        if(e.keyCode === 8 || e.keyCode === 48){
+
+                const anchorNode = selection.anchorNode
+                let rowNode
+
+                if(anchorNode.nodeName === 'P'){
+
+                    rowNode = anchorNode
+
+                 }
+                 else if(anchorNode.parentNode.nodeName === 'P'){
+
+                    rowNode = anchorNode.parentNode
+                }
+                
+                if(rowNode){
+                    
+                    if(rowNode.childNodes.length === 1){
+
+                        if(rowNode.childNodes[0].textContent.length < 1){
+
+                                if(rowNode.previousSibling === null){ // to avoid to remove the last rownode in the textbox
+                                    e.preventDefault()
+                                }
+                        }
+                    }
+                }           
+        }
     }
 
     /**
