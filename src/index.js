@@ -5,7 +5,6 @@ import image4 from './assets/img/format_list_numbered-black-24dp.svg';
 import image5 from './assets/img/format_list_bulleted-black-24dp.svg';
 
 import {style} from './assets/js/style'
-import { partialRight } from 'lodash';
 
 /**
 @todo implementation for dynamically formatting across multiple differenct nodes
@@ -234,7 +233,7 @@ class TextEditor extends HTMLElement {
 
         // surround the selected content
         if(selection.type === 'Range' && selection.anchorOffset !== selection.focusOffset){
-           
+            
             this.surroundMultipleNodes(selection, tagName)
         }
     }
@@ -376,19 +375,34 @@ class TextEditor extends HTMLElement {
         const content = range.cloneContents()
         const startContainer = range.startContainer
         const endContainer = range.endContainer
+        const rootNode = this.shadowRoot.querySelector('#content')
 
-        if(range.startOffset === 0){
+        if(range.startOffset === 0 || startContainer.tagName === 'P' ){
 
             let node = document.createElement(tagName)
             node.appendChild(content)
-   
-            const parentNode = this.getEqualParentNode(startContainer, endContainer)
 
-            if(parentNode.isEqualNode(startContainer.parentNode)){
+            const parentNode = this.getEqualParentNode(startContainer, endContainer)
+  
+            if(parentNode.isEqualNode(rootNode) && startContainer.childNodes.length === 1){
+
+                range.surroundContents(node)
+
+            } else if(parentNode.isEqualNode(startContainer.parentNode)){
+
+                if(startContainer.tagName === 'P'){
+                    
+                    const temporaryNode = node
+                    node = startContainer.cloneNode()
+                    node.appendChild(temporaryNode) 
+                }
+
                 parentNode.insertBefore(node, startContainer)
+
                 this.removeNodesInRange(range, startContainer)
 
             } else{
+
                 parentNode.insertBefore(node, startContainer.parentNode)
                 this.removeNodesInRange(range, startContainer.parentNode)
             }
@@ -498,19 +512,40 @@ class TextEditor extends HTMLElement {
 
     removeSurroundingNode( selection, nodeName ){
 
-        const selectionContent = selection.toString()
         const parentNode = selection.anchorNode.parentNode
-        let range = document.createRange()
         let content = selection.getRangeAt(0).cloneContents()
-
-        // case if the surrounding node is a parentnode
-        if(parentNode.nodeName === nodeName){       
         
-            parentNode.parentNode.insertBefore(content, parentNode)
+        // case if the surrounding node is the parentnode
+        if(parentNode.nodeName === nodeName){  
+
+            const range = document.createRange()
+
+            let firstChild, lastChild
+
+            parentNode.childNodes.forEach( childNode => {
+                
+                if(childNode.isEqualNode( parentNode.firstChild)){
+                    firstChild = parentNode.firstChild
+                }
+
+                if(childNode.isEqualNode( parentNode.lastChild)){
+                    lastChild = parentNode.lastChild
+                }
+
+                parentNode.parentNode.insertBefore(childNode, parentNode)
+            })
+
             parentNode.remove()
-            
+
+            range.setStartBefore(firstChild)
+            range.setEndAfter(lastChild)
+
+            selection.removeAllRanges()
+            selection.addRange(range)
+
             return
         }
+
 
         const anchorNode = selection.anchorNode
 
@@ -521,7 +556,7 @@ class TextEditor extends HTMLElement {
 
                 const childNodes = Array.from( content.firstChild.childNodes )
                 
-                if(node.isEqualNode( content.firstChild)){ // for the case, the document fragment contains the to removable node 
+                if(node.isEqualNode( content.firstChild )){ // for the case, the document fragment contains the to removable node 
 
                     childNodes.forEach( childNode => {
 
@@ -549,13 +584,12 @@ class TextEditor extends HTMLElement {
      */
     getEqualParentNode(node1, node2){
 
-        const rootNode = this.shadowRoot.getElementById('content')
         let parentNode = node1.parentNode
-
+    
         while( !parentNode.isEqualNode(node2.parentNode) ){
 
-            if(parentNode.isEqualNode(rootNode)){
-                return rootNode
+            if(parentNode.tagName === 'P'){
+                return parentNode
             }
 
             parentNode = parentNode.parentNode
