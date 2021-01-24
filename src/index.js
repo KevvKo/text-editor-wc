@@ -409,8 +409,8 @@ class TextEditor extends HTMLElement {
 
             const newRange = document.createRange()
 
-            newRange.setStartBefore(node)
-            newRange.setEndAfter(node)
+            newRange.setStartBefore(node.firstChild)
+            newRange.setEndAfter(node.lastChild)
 
             selection.removeAllRanges()
             selection.addRange(newRange)
@@ -514,12 +514,11 @@ class TextEditor extends HTMLElement {
 
         const parentNode = selection.anchorNode.parentNode
         let content = selection.getRangeAt(0).cloneContents()
-        
+
         // case if the surrounding node is the parentnode
         if(parentNode.nodeName === nodeName){  
 
             const range = document.createRange()
-
             let firstChild, lastChild
 
             parentNode.childNodes.forEach( childNode => {
@@ -549,9 +548,41 @@ class TextEditor extends HTMLElement {
 
         const anchorNode = selection.anchorNode
 
+
+        if(anchorNode.nodeName === nodeName){
+            
+            const parentOfAnchorNode = anchorNode.parentNode
+            let firstChild, lastChild
+
+            anchorNode.childNodes.forEach(childNode => {
+                                
+                if(childNode.isEqualNode( anchorNode.firstChild)){
+                    firstChild = anchorNode.firstChild
+                }
+
+                if(childNode.isEqualNode( anchorNode.lastChild)){
+                    lastChild = anchorNode.lastChild
+                }
+
+                parentOfAnchorNode.insertBefore(childNode, anchorNode)
+            })
+
+            const range = document.createRange()
+
+            range.setStartBefore(firstChild)
+            range.setEndAfter(lastChild)
+
+            selection.removeAllRanges()
+            selection.addRange(range)
+            
+            anchorNode.remove()
+            
+            return
+        }
+
         // to find the correct node for removiing 
         anchorNode.childNodes.forEach( (node) => {
-
+            
             if(node.nodeName === nodeName){
 
                 const childNodes = Array.from( content.firstChild.childNodes )
