@@ -5,6 +5,7 @@ import image4 from './assets/img/format_list_numbered-black-24dp.svg';
 import image5 from './assets/img/format_list_bulleted-black-24dp.svg';
 
 import {style} from './assets/js/style'
+import { partialRight } from 'lodash';
 
 /**
 @todo implementation for dynamically formatting across multiple differenct nodes
@@ -198,8 +199,8 @@ class TextEditor extends HTMLElement {
 
         let selection = window.getSelection()
         let element = document.createElement(elementName)
-        let range;
-        //remove formatting
+        element.innerHTML = '&#8203;'
+
         if(button.classList.contains("active")){
 
             this.removeFormatting(selection, tagName)    
@@ -214,19 +215,15 @@ class TextEditor extends HTMLElement {
 
             const box = this.shadowRoot.getElementById('content')
 
-            if(!box.contains(selection.anchorNode)){
-
-                const range = document.createRange()
+            if(!box.contains(selection.anchorNode)){ // to insert a formatting node if the texteditor is not focused
                 
-                range.setStart(box, 0)
-                range.setEnd(box, 0)
+                const paragraph = this.shadowRoot.querySelector('#content p')
 
-                selection.removeAllRanges()
-                selection.addRange(range)
-
-                this.insertElement(element, selection)
+                paragraph.appendChild(element)
+                this.setCaret(0, element)                
 
             }else{
+
                 this.insertElement(element, selection)
             }
 
@@ -307,17 +304,29 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {integer} caretIndex: index of a range for the caret
+     * @param {integer} caretIndex
+     * @param (object) element
      */
-    setCaret(caretIndex){
+    setCaret(caretIndex, element){
 
         let contentbox = this.shadowRoot.getElementById('content');
         contentbox.focus();
 
         let range = new Range()
         let selection = window.getSelection() 
-        range.setStart( selection.focusNode, caretIndex );
-        range.setEnd( selection.focusNode, caretIndex);
+        
+        if(element){
+     
+            range.setStart( element, caretIndex );
+            range.setEnd( element, caretIndex);
+        } else{
+            range.setStart( selection.focusNode, caretIndex );
+            range.setEnd( selection.focusNode, caretIndex);
+        }
+
+        selection.removeAllRanges()
+        selection.addRange(range)
+        
     }
 
     /**
@@ -347,8 +356,6 @@ class TextEditor extends HTMLElement {
     insertElement( element, selection ){
         
         const range = selection.getRangeAt(0)
-
-        element.innerHTML = '&#8203;';
 
         range.setStart(selection.anchorNode, selection.anchorOffset)
         range.setEnd(selection.focusNode, selection.focusOffset)
