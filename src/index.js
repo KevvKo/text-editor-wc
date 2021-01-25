@@ -169,6 +169,7 @@ class TextEditor extends HTMLElement {
      */
 
     toggleActiveState(button){
+
         if(button.classList.contains('active')){
             button.classList.remove('active')
         }else{
@@ -227,7 +228,6 @@ class TextEditor extends HTMLElement {
             }
 
             element.focus()
-
             return
         }
 
@@ -618,10 +618,9 @@ class TextEditor extends HTMLElement {
      */
 
     insertTextNode(selection, nodeName, caretIndex){
-        
+
         const parentNode = selection.anchorNode.parentNode.parentNode
         const editableNode = selection.anchorNode.parentNode
-        const range = selection.getRangeAt(0)
         const content = selection.anchorNode.textContent
         const frontContent = content.substring(0, caretIndex)
         const backContent = content.substring(caretIndex, content.length)
@@ -645,10 +644,16 @@ class TextEditor extends HTMLElement {
             frontNode.after(backNode)
         }
 
-        this.setRange(selection, frontNode, endNode)
-
+        this.setCaretAfterNode(frontNode, selection)
         editableNode.remove()
     }
+
+    /**
+     * 
+     * @param {Object} selection 
+     * @param {Object} startNode 
+     * @param {Object} EndNode 
+     */
 
     setRange(selection, startNode, EndNode){
 
