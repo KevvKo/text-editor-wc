@@ -407,16 +407,12 @@ class TextEditor extends HTMLElement {
                 this.removeNodesInRange(range, startContainer.parentNode)
             }
 
-            const newRange = document.createRange()
+            const firstChild = node.firstChild
+            const lastChild = node.lastChild
 
-            newRange.setStartBefore(node.firstChild)
-            newRange.setEndAfter(node.lastChild)
-
-            selection.removeAllRanges()
-            selection.addRange(newRange)
+            this.setRange(selection, firstChild, lastChild)
         }
     }
-
 
     /**
      * 
@@ -441,9 +437,7 @@ class TextEditor extends HTMLElement {
                 this.setCaretAfterNode(node, selection)
                 return
             }
-            
-            const node = selection.anchorNode.parentNode
-            
+                        
             this.insertTextNode(selection, nodeName, caretIndex)
             return
         }
@@ -459,7 +453,6 @@ class TextEditor extends HTMLElement {
      */
     removeNodesInRange(range, startNode){
 
-        const startContainer = range.startContainer
         const endNode = range.endContainer
         const parentNode = this.getEqualParentNode(startNode, endNode)
         const childNodes = Array.prototype.slice.call(parentNode.childNodes)
@@ -535,12 +528,7 @@ class TextEditor extends HTMLElement {
             })
 
             parentNode.remove()
-
-            range.setStartBefore(firstChild)
-            range.setEndAfter(lastChild)
-
-            selection.removeAllRanges()
-            selection.addRange(range)
+            this.setRange(selection, firstChild, lastChild)
 
             return
         }
@@ -567,14 +555,7 @@ class TextEditor extends HTMLElement {
                 parentOfAnchorNode.insertBefore(childNode, anchorNode)
             })
 
-            const range = document.createRange()
-
-            range.setStartBefore(firstChild)
-            range.setEndAfter(lastChild)
-
-            selection.removeAllRanges()
-            selection.addRange(range)
-            
+            this.setRange(selection, firstChild, lastChild)
             anchorNode.remove()
             
             return
@@ -664,13 +645,20 @@ class TextEditor extends HTMLElement {
             frontNode.after(backNode)
         }
 
-        range.setStartAfter(frontNode)
-        range.setEndBefore(backNode)
+        this.setRange(selection, frontNode, endNode)
+
+        editableNode.remove()
+    }
+
+    setRange(selection, startNode, EndNode){
+
+        const range = document.createRange()
+
+        range.setStartBefore(startNode)
+        range.setEndAfter(EndNode)
 
         selection.removeAllRanges()
         selection.addRange(range)
-
-        editableNode.remove()
     }
 
     connectedCallback() {
