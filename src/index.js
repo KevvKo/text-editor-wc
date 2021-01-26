@@ -307,18 +307,16 @@ class TextEditor extends HTMLElement {
      * @param (object) element
      */
     setCaret(caretIndex, element){
-
-        let contentbox = this.shadowRoot.getElementById('content');
-        contentbox.focus();
-
+        console.log("dd")
         let range = new Range()
         let selection = window.getSelection() 
         
         if(element){
-     
+
             range.setStart( element, caretIndex );
             range.setEnd( element, caretIndex);
         } else{
+            
             range.setStart( selection.focusNode, caretIndex );
             range.setEnd( selection.focusNode, caretIndex);
         }
@@ -343,6 +341,22 @@ class TextEditor extends HTMLElement {
         selection.removeAllRanges()
         selection.addRange(range)
 
+    }
+
+    /**
+     * 
+     * @param {Object} node 
+     * @param {Object} selection 
+     */
+    setCaretBefore(node, selection){
+
+        const range = selection.getRangeAt(0)
+
+        range.setStartBefore(node)
+        range.setEndBefore(node)
+
+        selection.removeAllRanges()
+        selection.addRange(range)
     }
 
     /**
@@ -427,7 +441,7 @@ class TextEditor extends HTMLElement {
 
             if(selection.anchorOffset === selection.focusOffset && selection.anchorOffset === 0 ){
                 
-                this.removeEmptyNode(nodeName, selection, caretIndex)
+                this.removeEmptyNode(nodeName, selection)
                 return
             }
 
@@ -471,7 +485,7 @@ class TextEditor extends HTMLElement {
      * @param {integer} caretIndex 
      */
 
-    removeEmptyNode(nodeName, selection, caretIndex){
+    removeEmptyNode(nodeName, selection){
 
         let nodeIsEmpty;
 
@@ -482,18 +496,22 @@ class TextEditor extends HTMLElement {
 
         if( selection.anchorNode.parentNode.nodeName === nodeName && nodeIsEmpty) {
             
-            selection.anchorNode.parentNode.remove()
-            this.setCaret(caretIndex)
+            const node = selection.anchorNode.parentNode
+
+            this.setCaretBefore(node, selection)
+            node.remove()
 
             return 
         }
 
         nodeIsEmpty = selection.anchorNode.textContent === ''
         if( selection.focusNode.nodeName === nodeName ) {
-            
-            selection.anchorNode.remove()
-            this.setCaret(caretIndex)
-            
+
+            const node = selection.anchorNode
+
+            this.setCaretBefore(node, selection)
+            node.remove()
+
             return
         }
     }
