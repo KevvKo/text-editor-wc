@@ -307,7 +307,7 @@ class TextEditor extends HTMLElement {
      * @param (object) element
      */
     setCaret(caretIndex, element){
-        console.log("dd")
+
         let range = new Range()
         let selection = window.getSelection() 
         
@@ -684,12 +684,38 @@ class TextEditor extends HTMLElement {
         selection.addRange(range)
     }
 
+    observeFormatting(){
+        
+        const selection = window.getSelection()
+        const range = selection.getRangeAt(0)
+        const formatTagNames = [ 'B', 'I', 'U']
+        let node = selection.anchorNode
+
+        if(node.tagName === 'P'){
+            return
+        }
+        
+        if(formatTagNames.includes( node.tagName )){
+            return
+        } 
+        
+        while( node.tagName !== 'P'){
+            node = node.parentNode 
+
+            if(formatTagNames.includes( node.tagName )){
+                return
+            }
+        }
+    }
+
     connectedCallback() {
         
         this.shadowRoot.getElementById('content').addEventListener('click', () => {
+            this.observeFormatting()
         })
 
         this.shadowRoot.getElementById('content').addEventListener('keydown', () => {
+            this.observeFormatting()
         })
     }
 }
