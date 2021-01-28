@@ -16,6 +16,12 @@ class TextEditor extends HTMLElement {
     constructor(){
         super()
 
+        this.surroundingFormatNodes = {
+            'B': false,             // bold
+            'I': false,             // italic
+            'U': false              // underlined
+        }
+
         // inline html template
         const template = document.createElement('div');
         template.setAttribute('id', 'text-editor');
@@ -122,7 +128,12 @@ class TextEditor extends HTMLElement {
 
         template.appendChild(textbox);
         textbox.appendChild(row)
-        
+
+        this.formatButtons = {
+            'B': boldButton,
+            'I': italicButton,
+            'U': underlinedButton
+        }
     }
 
     /**
@@ -179,7 +190,18 @@ class TextEditor extends HTMLElement {
     
     /**
      * 
-     * @param {button} button 
+     * @param {Object} button 
+     */
+
+    addActiveState(button){
+        if(!button.classList.contains('active')){
+            button.classList.add('active')
+        }
+    }
+
+    /**
+     * 
+     * @param {Object} button 
      */
 
     removeActiveState(button){
@@ -205,11 +227,13 @@ class TextEditor extends HTMLElement {
 
             this.removeFormatting(selection, tagName)    
             this.toggleActiveState(button)
+            this.surroundingFormatNodes[tagName] = false
 
             return
         }
 
         this.toggleActiveState(button)
+        this.surroundingFormatNodes[tagName] = true
 
         if(selection.type === 'Caret' && selection.isCollapsed){
 
@@ -243,6 +267,7 @@ class TextEditor extends HTMLElement {
     */
 
     formatBold(boldButton){
+
         this.format('b', 'B', boldButton)
     }
 
@@ -252,6 +277,7 @@ class TextEditor extends HTMLElement {
      */
 
     formatItalic(italicButton){
+
         this.format('i', 'I', italicButton)
     }
 
@@ -261,6 +287,7 @@ class TextEditor extends HTMLElement {
      */
 
     formatUnderlined(underlinedButton){
+
         this.format('u', 'U', underlinedButton)
     }
 
@@ -687,23 +714,45 @@ class TextEditor extends HTMLElement {
     observeFormatting(){
         
         const selection = window.getSelection()
-        const range = selection.getRangeAt(0)
         const formatTagNames = [ 'B', 'I', 'U']
         let node = selection.anchorNode
 
-        if(node.tagName === 'P'){
+        if(node.tagName === 'P' || node.parentNode.tagName === 'P'){
+
+            for( const [key, value] of Object.entries( this.surroundingFormatNodes)){
+                this.surroundingFormatNodes[key] = false
+            }
+
             return
         }
         
-        if(formatTagNames.includes( node.tagName )){
-            return
-        } 
-        
         while( node.tagName !== 'P'){
-            node = node.parentNode 
 
-            if(formatTagNames.includes( node.tagName )){
+            node = node.parentNode 
+            let tagName = node.tagName
+
+            if(node.tagName === 'P'){
                 return
+            }
+
+            if(formatTagNames.includes( tagName )){
+                this.surroundingFormatNodes[ tagName ] = true
+            }else{
+                this.surroundingFormatNodes[ tagName ] = false
+            }
+        }
+    }
+
+    setStatesForFormatButtons(){
+
+        for (const [key, value] of Object.entries(this.surroundingFormatNodes)){
+
+            const button = this.formatButtons[key]
+
+            if(value){
+                this.addActiveState(button)
+            }else{
+                this.removeActiveState(button)
             }
         }
     }
@@ -712,10 +761,12 @@ class TextEditor extends HTMLElement {
         
         this.shadowRoot.getElementById('content').addEventListener('click', () => {
             this.observeFormatting()
+            this.setStatesForFormatButtons()
         })
 
-        this.shadowRoot.getElementById('content').addEventListener('keydown', () => {
+        this.shadowRoot.getElementById('content').addEventListener('keyup', () => {
             this.observeFormatting()
+            this.setStatesForFormatButtons()
         })
     }
 }
