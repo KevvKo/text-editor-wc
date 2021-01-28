@@ -28,6 +28,16 @@ export const style = `
     display: inline-block;
     padding: 2px;
     border-radius: 3px;
+    transition: 0.1s;
+}
+
+.toolbox-button:hover{
+    cursor: pointer;
+    background: #A8A8A8;
+}
+
+.toolbox-button img{
+    transition: 0.1s;
 }
 
 .active{
@@ -36,12 +46,6 @@ export const style = `
 
 .active img{
     filter: invert(42%) sepia(85%) saturate(458%) hue-rotate(161deg) brightness(93%) contrast(83%);
-}
-
-.toolbox-button:hover{
-    cursor: pointer;
-    transition: 0.1s;
-    background: #A8A8A8;
 }
 
 #underlined{
