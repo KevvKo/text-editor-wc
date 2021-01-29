@@ -8,7 +8,7 @@ import {style} from './assets/js/style'
 
 /**
 @todo implementation for dynamically formatting across multiple differenct nodes
- @todo implementation format functions ordered-/unordered list
+@todo implementation format functions ordered-/unordered list
 
  */
 class TextEditor extends HTMLElement {
@@ -460,6 +460,12 @@ class TextEditor extends HTMLElement {
      * @param {Selection} selection 
      * @param {String} nodeName 
      */
+
+     /**
+      * 
+      * @@todo remove second condition if solution for removing non zero char is implemented 
+      * or find a better approach as condition
+      */
     removeFormatting(selection, nodeName){
 
         let caretIndex = this.getCaret()
@@ -471,8 +477,8 @@ class TextEditor extends HTMLElement {
                 this.removeEmptyNode(nodeName, selection)
                 return
             }
-
-            if(selection.anchorOffset === selection.anchorNode.length-1){
+                                                                         // removable                       
+            if(selection.anchorOffset === selection.anchorNode.length || selection.anchorOffset === selection.anchorNode.length -1){
 
                 const node = selection.anchorNode.parentNode
                 this.setCaretAfterNode(node, selection)
