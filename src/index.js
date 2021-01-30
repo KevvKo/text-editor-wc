@@ -418,14 +418,14 @@ class TextEditor extends HTMLElement {
         const endContainer = range.endContainer
         const rootNode = this.shadowRoot.querySelector('#content')
 
-        if(range.startOffset === 0 || startContainer.tagName === 'P' ){
+        if( startContainer.tagName === 'P' || startContainer.parentNode.tagName === 'P' ){
 
             let node = document.createElement(tagName)
             node.appendChild(content)
 
             const parentNode = this.getEqualParentNode(startContainer, endContainer)
-  
-            if(parentNode.isEqualNode(rootNode) && startContainer.childNodes.length === 1){
+
+            if(parentNode.isEqualNode(rootNode) || startContainer.isEqualNode(endContainer)){
 
                 range.surroundContents(node)
 
