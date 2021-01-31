@@ -68,6 +68,10 @@ class TextEditor extends HTMLElement {
             this.preventDelete(e)
         })
         
+        textbox.addEventListener('input', (e) => {
+            this.removeZeroWidthCharacter()
+        })
+
         boldButton.addEventListener('click', () => {
             this.formatBold(boldButton)
         })
@@ -214,17 +218,37 @@ class TextEditor extends HTMLElement {
      * 
      * @param {Node} node 
      */
-    removeZeroWidthCharacter(node){
+    removeZeroWidthCharacter(){
 
-        if(node.innerHTML.length > 1){
-            
-           if(node.innerHTML.search('\u200B') >= 0 ){
+        const selection = window.getSelection()
+        const node = selection.anchorNode
+        let index = selection.anchorOffset
+
+        if(node.nodeType !== 3){
+
+            if(node.innerHTML.length >= 1 && node.innerHTML.search('\u200B') >= 0 ){
+
                node.innerHTML = node.innerHTML.replace('\u200B', '')
-           }
 
-        } else {
-            node.innerHTML = '\u200B'
+               this.setCaret(index, node)
+            }
+
+        } else{
+          
+            
+            if(node.parentNode.innerHTML.length > 1 && node.parentNode.innerHTML.search('\u200B') >= 0 ){
+                node.parentNode.innerHTML = node.parentNode.innerHTML.replace('\u200B', '')
+
+                // correct the index if the caret is set after the zer width character.
+                // can be caused by clicking in the first row of the editor
+                if(index > 1){  
+                    index -= 1
+                }
+
+                this.setCaret(index, node.parentNode)
+            } 
         }
+
     }
 
     /**
@@ -259,16 +283,15 @@ class TextEditor extends HTMLElement {
             if(!box.contains(selection.anchorNode)){ // to insert a formatting node if the texteditor is not focused
                 
                 const paragraph = this.shadowRoot.querySelector('#content p')
-
-                paragraph.appendChild(element)
-                this.setCaret(0, element)                
+                paragraph.innerHTML = paragraph.innerHTML.replace('\u200B', '')
+                paragraph.appendChild(element)       
+                this.setCaret(0, element)
 
             }else{
 
                 this.insertElement(element, selection)
             }
-
-            element.focus()
+            
             return
         }
 
@@ -355,9 +378,8 @@ class TextEditor extends HTMLElement {
 
         let range = new Range()
         let selection = window.getSelection() 
-        
-        if(element){
 
+        if(element){
             range.setStart( element, caretIndex );
             range.setEnd( element, caretIndex);
         } else{
@@ -422,6 +444,7 @@ class TextEditor extends HTMLElement {
 
         range.setStart(element, 0)
         range.setEnd(element, 0)
+
     }
 
     /**
