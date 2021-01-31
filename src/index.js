@@ -41,28 +41,28 @@ class TextEditor extends HTMLElement {
         toolboxSection2.className = 'toolbox-section' 
 
         //create the spans and buttons 
-        const boldButton = document.createElement('div');
+        const boldButton = document.createElement('span');
         boldButton.id = 'bold'
         boldButton.setAttribute('class', 'toolbox-button');
 
-        const italicButton = document.createElement('div');
+        const italicButton = document.createElement('span');
         italicButton.id = 'italic'
         italicButton.setAttribute('class', 'toolbox-button');
 
-        const underlinedButton = document.createElement('div');
+        const underlinedButton = document.createElement('span');
         underlinedButton.id = 'underlined'
         underlinedButton.setAttribute('class', 'toolbox-button');
 
-        const unorderedButton = document.createElement('div');
+        const unorderedButton = document.createElement('span');
         unorderedButton.id = 'unorderedList'
         unorderedButton.setAttribute('class', 'toolbox-button');
 
-        const orderedButton = document.createElement('div');
+        const orderedButton = document.createElement('span');
         orderedButton.id = 'orderedList'
         orderedButton.setAttribute('class', 'toolbox-button');
 
         const row = document.createElement('p')
-        row.innerHTML = '&#8203';
+        row.innerHTML = '\u200B';
 
         textbox.addEventListener('keydown', (e) => {
             this.preventDelete(e)
@@ -138,7 +138,7 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {object} e 
+     * @param {Event} e 
      */
     preventDelete(e){
         
@@ -176,7 +176,7 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {button} button: a button element from the toolbox 
+     * @param {HTMLButtonElement} button: a button element from the toolbox 
      */
 
     toggleActiveState(button){
@@ -190,7 +190,7 @@ class TextEditor extends HTMLElement {
     
     /**
      * 
-     * @param {Object} button 
+     * @param {HTMLButtonElement} button 
      */
 
     addActiveState(button){
@@ -201,7 +201,7 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {Object} button 
+     * @param {HTMLButtonElement} button 
      */
 
     removeActiveState(button){
@@ -212,16 +212,33 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
+     * @param {Node} node 
+     */
+    removeZeroWidthCharacter(node){
+
+        if(node.innerHTML.length > 1){
+            
+           if(node.innerHTML.search('\u200B') >= 0 ){
+               node.innerHTML = node.innerHTML.replace('\u200B', '')
+           }
+
+        } else {
+            node.innerHTML = '\u200B'
+        }
+    }
+
+    /**
+     * 
      * @param {String} elementName 
      * @param {String} tagName 
-     * @param {Object} button
+     * @param {HTMLButtonElement} button
      */
 
     format(elementName, tagName, button){
 
         let selection = window.getSelection()
         let element = document.createElement(elementName)
-        element.innerHTML = '&#8203;'
+        element.innerHTML = '\u200B'
 
         if(button.classList.contains("active")){
 
@@ -262,9 +279,10 @@ class TextEditor extends HTMLElement {
         }
     }
 
-    /*
-        boldButton: button - button to format text bold
-    */
+    /**
+     * 
+     * @param {HTMLButtonElement} boldButton 
+     */
 
     formatBold(boldButton){
 
@@ -273,7 +291,7 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {button} italicButton: button to format text italic
+     * @param {HTMLButtonElement} italicButton: button to format text italic
      */
 
     formatItalic(italicButton){
@@ -283,7 +301,7 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {button} underlinedButton: button to format text as underlined
+     * @param {HTMLButtonElement} underlinedButton: button to format text as underlined
      */
 
     formatUnderlined(underlinedButton){
@@ -293,8 +311,8 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {button} unorderedButton: button - button to insert a unordered List
-     * @param {button} orderedButton: button - button to insert a ordered list
+     * @param {HTMLButtonElement} unorderedButton: button - button to insert a unordered List
+     * @param {HTMLButtonElement} orderedButton: button - button to insert a ordered list
      */
 
     formatUnorderedList(unorderedButton, orderedButton){
@@ -304,8 +322,8 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {button} orderedButton - button to insert a ordered list
-     * @param {button} unorderedButton - button to insert a unordered List
+     * @param {HTMLButtonElement} orderedButton - button to insert a ordered list
+     * @param {HTMLButtonElement} unorderedButton - button to insert a unordered List
      */
 
     formatOrderedList(orderedButton, unorderedButton){
@@ -315,8 +333,8 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {integer} start: startindex of a range for the caret
-     * @param {integer} end: endindex of a range for the caret
+     * @param {Number} start: startindex of a range for the caret
+     * @param {Number} end: endindex of a range for the caret
      */
 
     getCaret(){
@@ -330,8 +348,8 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {integer} caretIndex
-     * @param (object) element
+     * @param {Number} caretIndex
+     * @param {Node} element
      */
     setCaret(caretIndex, element){
 
@@ -355,12 +373,12 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {Object} node
-     * @param (Object) selection 
+     * @param {Node} node
+     * @param {Selection} selection 
      */
     setCaretAfterNode(node, selection){
-        
-        const range = selection.getRangeAt(0)
+     
+        const range = document.createRange()
 
         range.setStartAfter(node)
         range.setEndAfter(node)
@@ -368,12 +386,13 @@ class TextEditor extends HTMLElement {
         selection.removeAllRanges()
         selection.addRange(range)
 
+
     }
 
     /**
      * 
-     * @param {Object} node 
-     * @param {Object} selection 
+     * @param {Node} node 
+     * @param {Selection} selection 
      */
     setCaretBefore(node, selection){
 
@@ -388,9 +407,9 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {node} element  - a formatting node element ( <b>, <i>, <u>,---)
-     * @param {object} selection 
-     * @param {object} range 
+     * @param {Node} element  - a formatting node element ( <b>, <i>, <u>,---)
+     * @param {Selection} selection 
+     * @param {Range} range 
      */
 
     insertElement( element, selection ){
@@ -407,8 +426,8 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {Object} selection 
-     * @param {Object} tagName 
+     * @param {Selection} selection 
+     * @param {String} tagName 
      */
     surroundMultipleNodes(selection, tagName){
 
@@ -495,8 +514,8 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {Object} range 
-     * @param (Object) startNode
+     * @param {Range} range 
+     * @param {Node} startNode
      */
     removeNodesInRange(range, startNode){
 
@@ -511,11 +530,11 @@ class TextEditor extends HTMLElement {
             node.remove()
         })
     }
+
     /**
      * 
-     * @param {string} nodeName 
-     * @param {Object} selection 
-     * @param {integer} caretIndex 
+     * @param {String} nodeName 
+     * @param {Selection} selection 
      */
 
     removeEmptyNode(nodeName, selection){
@@ -551,7 +570,8 @@ class TextEditor extends HTMLElement {
     
     /**
      * 
-     * @param {object} selection 
+     * @param {Selection} selection
+     * @param {String} nodeName 
      */
 
     removeSurroundingNode( selection, nodeName ){
@@ -642,8 +662,8 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {Object} node1 
-     * @param {Object} node2 
+     * @param {Node} node1 
+     * @param {Node} node2 
      */
     getEqualParentNode(node1, node2){
 
@@ -663,9 +683,9 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {*} selection 
-     * @param {*} nodeName 
-     * @param {*} caretIndex 
+     * @param {Selection} selection 
+     * @param {String} nodeName 
+     * @param {Number} caretIndex 
      */
 
     insertTextNode(selection, nodeName, caretIndex){
@@ -701,9 +721,9 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {Object} selection 
-     * @param {Object} startNode 
-     * @param {Object} EndNode 
+     * @param {Selection} selection 
+     * @param {Node} startNode 
+     * @param {Node} EndNode 
      */
 
     setRange(selection, startNode, EndNode){
