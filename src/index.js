@@ -68,7 +68,7 @@ class TextEditor extends HTMLElement {
             this.preventDelete(e)
         })
         
-        textbox.addEventListener('input', (e) => {
+        textbox.addEventListener('input', () => {
             this.removeZeroWidthCharacter()
         })
 
@@ -291,7 +291,7 @@ class TextEditor extends HTMLElement {
 
                 this.insertElement(element, selection)
             }
-            
+
             return
         }
 
@@ -761,23 +761,25 @@ class TextEditor extends HTMLElement {
     }
 
     observeFormatting(){
-        
+
         const selection = window.getSelection()
         const formatTagNames = [ 'B', 'I', 'U']
-        let node = selection.anchorNode
+        const range = selection.getRangeAt(0)
+        let node = range.startContainer
 
-        if(node.tagName === 'P' || node.parentNode.tagName === 'P'){
-
-            for( const [key, value] of Object.entries( this.surroundingFormatNodes)){
-                this.surroundingFormatNodes[key] = false
-            }
-
-            return
+        this.surroundingFormatNodes = {
+            'B': false,           
+            'I': false,             
+            'U': false            
         }
         
         while( node.tagName !== 'P'){
 
-            node = node.parentNode 
+            if(node.nodeType === 3) {
+                node = node.parentNode 
+                continue
+            }
+
             let tagName = node.tagName
 
             if(node.tagName === 'P'){
@@ -789,11 +791,11 @@ class TextEditor extends HTMLElement {
             }else{
                 this.surroundingFormatNodes[ tagName ] = false
             }
+            node = node.parentNode 
         }
     }
 
     setStatesForFormatButtons(){
-
         for (const [key, value] of Object.entries(this.surroundingFormatNodes)){
 
             const button = this.formatButtons[key]

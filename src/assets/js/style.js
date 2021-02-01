@@ -48,10 +48,6 @@ export const style = `
     filter: invert(42%) sepia(85%) saturate(458%) hue-rotate(161deg) brightness(93%) contrast(83%);
 }
 
-#underlined{
-
-}
-
 #content{ 
     border: none;
     border-top: 1px solid #A8A8A8; 
