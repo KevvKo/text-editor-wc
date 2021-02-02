@@ -605,11 +605,11 @@ class TextEditor extends HTMLElement {
         // case if the surrounding node is the parentnode
         if(parentNode.nodeName === nodeName){  
 
-            const range = document.createRange()
             let firstChild, lastChild
-
+            const nodeArray = []
+            
             parentNode.childNodes.forEach( childNode => {
-                
+
                 if(childNode.isEqualNode( parentNode.firstChild)){
                     firstChild = parentNode.firstChild
                 }
@@ -618,9 +618,13 @@ class TextEditor extends HTMLElement {
                     lastChild = parentNode.lastChild
                 }
 
-                parentNode.parentNode.insertBefore(childNode, parentNode)
+                nodeArray.push(childNode)
             })
 
+            nodeArray.forEach( childNode => {
+                parentNode.parentNode.insertBefore(childNode, parentNode)    
+            })
+        
             parentNode.remove()
             this.setRange(selection, firstChild, lastChild)
 
@@ -635,7 +639,7 @@ class TextEditor extends HTMLElement {
             
             const parentOfAnchorNode = anchorNode.parentNode
             let firstChild, lastChild
-
+            const nodeArray = []
             anchorNode.childNodes.forEach(childNode => {
                                 
                 if(childNode.isEqualNode( anchorNode.firstChild)){
@@ -646,9 +650,13 @@ class TextEditor extends HTMLElement {
                     lastChild = anchorNode.lastChild
                 }
 
-                parentOfAnchorNode.insertBefore(childNode, anchorNode)
+                nodeArray.push(childNode)
             })
 
+            nodeArray.forEach( childNode => {
+                parentOfAnchorNode.insertBefore(childNode, anchorNode)    
+            })
+            
             this.setRange(selection, firstChild, lastChild)
             anchorNode.remove()
             
