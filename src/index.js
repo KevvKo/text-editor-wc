@@ -605,61 +605,15 @@ class TextEditor extends HTMLElement {
         // case if the surrounding node is the parentnode
         if(parentNode.nodeName === nodeName){  
 
-            let firstChild, lastChild
-            const nodeArray = []
-            
-            parentNode.childNodes.forEach( childNode => {
-
-                if(childNode.isEqualNode( parentNode.firstChild)){
-                    firstChild = parentNode.firstChild
-                }
-
-                if(childNode.isEqualNode( parentNode.lastChild)){
-                    lastChild = parentNode.lastChild
-                }
-
-                nodeArray.push(childNode)
-            })
-
-            nodeArray.forEach( childNode => {
-                parentNode.parentNode.insertBefore(childNode, parentNode)    
-            })
-        
-            parentNode.remove()
-            this.setRange(selection, firstChild, lastChild)
-
+            this.insertChildNodesBefore(selection, parentNode)            
             return
         }
 
-
         const anchorNode = selection.anchorNode
-
 
         if(anchorNode.nodeName === nodeName){
             
-            const parentOfAnchorNode = anchorNode.parentNode
-            let firstChild, lastChild
-            const nodeArray = []
-            anchorNode.childNodes.forEach(childNode => {
-                                
-                if(childNode.isEqualNode( anchorNode.firstChild)){
-                    firstChild = anchorNode.firstChild
-                }
-
-                if(childNode.isEqualNode( anchorNode.lastChild)){
-                    lastChild = anchorNode.lastChild
-                }
-
-                nodeArray.push(childNode)
-            })
-
-            nodeArray.forEach( childNode => {
-                parentOfAnchorNode.insertBefore(childNode, anchorNode)    
-            })
-            
-            this.setRange(selection, firstChild, lastChild)
-            anchorNode.remove()
-            
+            this.insertChildNodesBefore(selection, anchorNode)            
             return
         }
 
@@ -689,6 +643,39 @@ class TextEditor extends HTMLElement {
 
         const selection = window.getSelection()
         return selection.anchorNode.parentNode
+    }
+
+    /**
+     * 
+     * @param {Selection} selection 
+     * @param {Node} focusNode 
+     */
+
+    insertChildNodesBefore(selection, focusNode){
+
+        const parentOfAnchorNode = focusNode.parentNode
+        let firstChild, lastChild
+        const nodeArray = []
+
+        focusNode.childNodes.forEach(childNode => {
+                            
+            if(childNode.isEqualNode( focusNode.firstChild)){
+                firstChild = focusNode.firstChild
+            }
+
+            if(childNode.isEqualNode( focusNode.lastChild)){
+                lastChild = focusNode.lastChild
+            }
+
+            nodeArray.push(childNode)
+        })
+
+        nodeArray.forEach( childNode => {
+            parentOfAnchorNode.insertBefore(childNode, focusNode)    
+        })
+        
+        this.setRange(selection, firstChild, lastChild)
+        focusNode.remove()
     }
 
     /**
