@@ -278,6 +278,20 @@ class TextEditor extends HTMLElement {
 
         if(selection.type === 'Caret' && selection.isCollapsed){
 
+            // set the caret at the end of the previous sibling to avoid for the insertion
+            // of an unnesseccary node
+            
+            if(selection.anchorNode.previousSibling){ 
+                
+                const previousSibling = selection.anchorNode.previousSibling
+
+                if(selection.anchorOffset === 0 && previousSibling.tagName === tagName){
+                
+                    this.setCaret(previousSibling.childNodes.length, previousSibling)
+                    return
+                }
+            }
+
             const box = this.shadowRoot.getElementById('content')
 
             if(!box.contains(selection.anchorNode)){ // to insert a formatting node if the texteditor is not focused
@@ -314,7 +328,7 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {HTMLButtonElement} italicButton: button to format text italic
+     * @param {HTMLButtonElement} italicButton
      */
 
     formatItalic(italicButton){
@@ -324,7 +338,7 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {HTMLButtonElement} underlinedButton: button to format text as underlined
+     * @param {HTMLButtonElement} underlinedButton
      */
 
     formatUnderlined(underlinedButton){
@@ -334,8 +348,8 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {HTMLButtonElement} unorderedButton: button - button to insert a unordered List
-     * @param {HTMLButtonElement} orderedButton: button - button to insert a ordered list
+     * @param {HTMLButtonElement} unorderedButton
+     * @param {HTMLButtonElement} orderedButton
      */
 
     formatUnorderedList(unorderedButton, orderedButton){
@@ -345,20 +359,14 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {HTMLButtonElement} orderedButton - button to insert a ordered list
-     * @param {HTMLButtonElement} unorderedButton - button to insert a unordered List
+     * @param {HTMLButtonElement} orderedButton
+     * @param {HTMLButtonElement} unorderedButton
      */
 
     formatOrderedList(orderedButton, unorderedButton){
         this.toggleActiveState(orderedButton)
         this.removeActiveState(unorderedButton)
     }
-
-    /**
-     * 
-     * @param {Number} start: startindex of a range for the caret
-     * @param {Number} end: endindex of a range for the caret
-     */
 
     getCaret(){
 
@@ -429,7 +437,6 @@ class TextEditor extends HTMLElement {
 
     /**
      * 
-     * @param {Node} element  - a formatting node element ( <b>, <i>, <u>,---)
      * @param {Selection} selection 
      * @param {Range} range 
      */
