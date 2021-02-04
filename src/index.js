@@ -529,7 +529,7 @@ class TextEditor extends HTMLElement {
                 return
             }
                                                                          // removable                       
-            if(selection.anchorOffset === selection.anchorNode.length || selection.anchorOffset === selection.anchorNode.length -1){
+            if(selection.anchorOffset === selection.anchorNode.length || selection.anchorOffset === selection.anchorNode.length){
 
                 const node = selection.anchorNode.parentNode
 
