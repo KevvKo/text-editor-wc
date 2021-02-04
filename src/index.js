@@ -235,7 +235,6 @@ class TextEditor extends HTMLElement {
 
         } else{
           
-            
             if(node.parentNode.innerHTML.length > 1 && node.parentNode.innerHTML.search('\u200B') >= 0 ){
                 node.parentNode.innerHTML = node.parentNode.innerHTML.replace('\u200B', '')
 
@@ -279,8 +278,8 @@ class TextEditor extends HTMLElement {
         if(selection.type === 'Caret' && selection.isCollapsed){
 
             // set the caret at the end of the previous sibling to avoid for the insertion
-            // of an unnesseccary node
-            
+            // of an unnecessary node
+
             if(selection.anchorNode.previousSibling){ 
                 
                 const previousSibling = selection.anchorNode.previousSibling
@@ -293,15 +292,19 @@ class TextEditor extends HTMLElement {
             }
 
             const box = this.shadowRoot.getElementById('content')
+            const paragraph = this.shadowRoot.querySelector('#content p')
 
             if(!box.contains(selection.anchorNode)){ // to insert a formatting node if the texteditor is not focused
                 
-                const paragraph = this.shadowRoot.querySelector('#content p')
                 paragraph.innerHTML = paragraph.innerHTML.replace('\u200B', '')
                 paragraph.appendChild(element)       
                 this.setCaret(0, element)
 
             }else{
+
+                if(selection.anchorNode.parentNode.isEqualNode(paragraph)){
+                    paragraph.innerHTML = paragraph.innerHTML.replace('\u200B', '')
+                }
 
                 this.insertElement(element, selection)
             }
@@ -409,13 +412,12 @@ class TextEditor extends HTMLElement {
     setCaretAfterNode(node, selection){
      
         const range = document.createRange()
-
+    
         range.setStartAfter(node)
         range.setEndAfter(node)
 
         selection.removeAllRanges()
         selection.addRange(range)
-
 
     }
 
@@ -530,6 +532,7 @@ class TextEditor extends HTMLElement {
             if(selection.anchorOffset === selection.anchorNode.length || selection.anchorOffset === selection.anchorNode.length -1){
 
                 const node = selection.anchorNode.parentNode
+
                 this.setCaretAfterNode(node, selection)
                 return
             }
@@ -774,7 +777,7 @@ class TextEditor extends HTMLElement {
             'I': false,             
             'U': false            
         }
-        
+
         while( node.tagName !== 'P'){
 
             if(node.nodeType === 3) {
