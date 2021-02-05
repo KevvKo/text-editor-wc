@@ -302,7 +302,7 @@ class TextEditor extends HTMLElement {
 
             }else{
 
-                if(selection.anchorNode.parentNode.isEqualNode(paragraph)){
+                if(selection.anchorNode.parentNode.isEqualNode(paragraph) && paragraph.innerHTML.search('\u200B') >= 0){
                     paragraph.innerHTML = paragraph.innerHTML.replace('\u200B', '')
                 }
 
