@@ -279,17 +279,18 @@ class TextEditor extends HTMLElement {
 
             // set the caret at the end of the previous sibling to avoid for the insertion
             // of an unnecessary node
+            // console.log(selection)
 
-            if(selection.anchorNode.previousSibling){ 
-                
-                const previousSibling = selection.anchorNode.previousSibling
+            // if(selection.anchorNode.previousSibling){ 
+            //     console.log(2)
+            //     const previousSibling = selection.anchorNode.previousSibling
 
-                if(selection.anchorOffset === 0 && previousSibling.tagName === tagName){
+            //     if(selection.anchorOffset === 0 && previousSibling.tagName === tagName){
                 
-                    this.setCaret(previousSibling.childNodes.length, previousSibling)
-                    return
-                }
-            }
+            //         this.setCaret(previousSibling.childNodes.length, previousSibling)
+            //         return
+            //     }
+            // }
 
             const box = this.shadowRoot.getElementById('content')
             const paragraph = this.shadowRoot.querySelector('#content p')
@@ -523,8 +524,12 @@ class TextEditor extends HTMLElement {
 
         if(selection.isCollapsed){
 
-            if(selection.anchorOffset === selection.focusOffset && selection.anchorOffset === 0 ){
-                
+            const nodeIsEmpy = 
+                selection.anchorNode.textContent.search('\u200B') >= -1 &&
+                selection.anchorNode.textContent.length === 1 ||
+                selection.anchorNode.textContent.length === 0
+
+            if(nodeIsEmpy){
                 this.removeEmptyNode(nodeName, selection)
                 return
             }
@@ -575,9 +580,12 @@ class TextEditor extends HTMLElement {
         let nodeIsEmpty;
 
         // depend on selection, which case will be confirmed for an empty node
-        // length of 1, cause the zero-width character is included -> just a temporary solution, until a better workflow is implemented
+        // length of 1, cause the zero-width character is included 
 
-        nodeIsEmpty = selection.anchorNode.parentNode.textContent.length === 1; 
+        nodeIsEmpty = 
+            selection.anchorNode.parentNode.textContent.length === 1 
+            && 
+            selection.anchorNode.parentNode.innerText.search('\u200B') >= 0; 
 
         if( selection.anchorNode.parentNode.nodeName === nodeName && nodeIsEmpty) {
             
