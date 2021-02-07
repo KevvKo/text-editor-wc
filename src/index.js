@@ -525,7 +525,7 @@ class TextEditor extends HTMLElement {
         if(selection.isCollapsed){
 
             const nodeIsEmpy = 
-                selection.anchorNode.textContent.search('\u200B') >= -1 &&
+                selection.anchorNode.textContent.search('\u200B') > -1 &&
                 selection.anchorNode.textContent.length === 1 ||
                 selection.anchorNode.textContent.length === 0
 
@@ -533,8 +533,16 @@ class TextEditor extends HTMLElement {
                 this.removeEmptyNode(nodeName, selection)
                 return
             }
-                                                                         // removable                       
-            if(selection.anchorOffset === selection.anchorNode.length || selection.anchorOffset === selection.anchorNode.length){
+                                                               
+            else if(selection.anchorOffset === 0){
+                
+                const node = selection.anchorNode.parentNode
+
+                this.setCaretBefore(node, selection)
+                return
+            }
+            // removable                       
+            else if(selection.anchorOffset === selection.anchorNode.length || selection.anchorOffset === selection.anchorNode.length){
 
                 const node = selection.anchorNode.parentNode
 
