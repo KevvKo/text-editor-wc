@@ -53,7 +53,6 @@ export const style = `
     border-top: 1px solid #A8A8A8; 
     padding: 10px;
     flex-grow: 2; 
-    word-break: break-all;
     resize: none;
 }
 

@@ -64,6 +64,8 @@ class TextEditor extends HTMLElement {
         const row = document.createElement('p')
         row.innerHTML = '\u200B';
 
+        const lineBreak = document.createElement('br')
+        row.appendChild(lineBreak)
         textbox.addEventListener('keydown', (e) => {
             this.preventDelete(e)
         })
@@ -277,20 +279,6 @@ class TextEditor extends HTMLElement {
 
         if(selection.type === 'Caret' && selection.isCollapsed){
 
-            // set the caret at the end of the previous sibling to avoid for the insertion
-            // of an unnecessary node
-            // console.log(selection)
-
-            // if(selection.anchorNode.previousSibling){ 
-            //     console.log(2)
-            //     const previousSibling = selection.anchorNode.previousSibling
-
-            //     if(selection.anchorOffset === 0 && previousSibling.tagName === tagName){
-                
-            //         this.setCaret(previousSibling.childNodes.length, previousSibling)
-            //         return
-            //     }
-            // }
 
             const box = this.shadowRoot.getElementById('content')
             const paragraph = this.shadowRoot.querySelector('#content p')
@@ -298,7 +286,8 @@ class TextEditor extends HTMLElement {
             if(!box.contains(selection.anchorNode)){ // to insert a formatting node if the texteditor is not focused
                 
                 paragraph.innerHTML = paragraph.innerHTML.replace('\u200B', '')
-                paragraph.appendChild(element)       
+                paragraph.insertAdjacentElement('afterbegin', element)
+
                 this.setCaret(0, element)
 
             }else{
@@ -545,7 +534,7 @@ class TextEditor extends HTMLElement {
             else if(selection.anchorOffset === selection.anchorNode.length || selection.anchorOffset === selection.anchorNode.length){
 
                 const node = selection.anchorNode.parentNode
-
+                console.log(node.textContent.length )
                 this.setCaretAfterNode(node, selection)
                 return
             }
@@ -832,11 +821,13 @@ class TextEditor extends HTMLElement {
     connectedCallback() {
         
         this.shadowRoot.getElementById('content').addEventListener('click', () => {
+
             this.observeFormatting()
             this.setStatesForFormatButtons()
         })
 
         this.shadowRoot.getElementById('content').addEventListener('keyup', () => {
+
             this.observeFormatting()
             this.setStatesForFormatButtons()
         })
