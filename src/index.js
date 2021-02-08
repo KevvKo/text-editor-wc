@@ -152,31 +152,31 @@ class TextEditor extends HTMLElement {
 
         if(e.keyCode === 8 || e.keyCode === 48){
 
-                const anchorNode = selection.anchorNode
-                let rowNode
+            const anchorNode = selection.anchorNode
+            let rowNode
 
-                if(anchorNode.nodeName === 'P'){
+            if(anchorNode.nodeName === 'P'){
 
-                    rowNode = anchorNode
+                rowNode = anchorNode
 
-                 }
-                 else if(anchorNode.parentNode.nodeName === 'P'){
-
-                    rowNode = anchorNode.parentNode
                 }
+                else if(anchorNode.parentNode.nodeName === 'P'){
+
+                rowNode = anchorNode.parentNode
+            }
+            
+            if(rowNode){
                 
-                if(rowNode){
-                    
-                    if(rowNode.childNodes.length === 1){
+                if(rowNode.childNodes.length === 1){
 
-                        if(rowNode.childNodes[0].textContent.length < 1){
+                    if(rowNode.childNodes[0].textContent.length < 1){
 
-                                if(rowNode.previousSibling === null){ // to avoid to remove the last rownode in the textbox
-                                    e.preventDefault()
-                                }
+                        if(rowNode.previousSibling === null){ // to avoid to remove the last rownode in the textbox
+                            e.preventDefault()
                         }
                     }
-                }           
+                }
+            }           
         }
     }
 
@@ -291,11 +291,7 @@ class TextEditor extends HTMLElement {
                 this.setCaret(0, element)
 
             }else{
-
-                if(selection.anchorNode.parentNode.isEqualNode(paragraph) && paragraph.innerHTML.search('\u200B') >= 0){
-                    paragraph.innerHTML = paragraph.innerHTML.replace('\u200B', '')
-                }
-
+            
                 this.insertElement(element, selection)
             }
 
@@ -436,6 +432,14 @@ class TextEditor extends HTMLElement {
     insertElement( element, selection ){
         
         const range = selection.getRangeAt(0)
+        const node = selection.anchorNode
+
+        if(node.nodeType !== 3){
+
+            if( node.innerHTML.search('\u200B') >= 0){
+                node.innerHTML = node.innerHTML.replace('\u200B', '')
+            }
+        }
 
         range.setStart(selection.anchorNode, selection.anchorOffset)
         range.setEnd(selection.focusNode, selection.focusOffset)
