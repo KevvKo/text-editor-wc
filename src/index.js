@@ -506,11 +506,6 @@ class TextEditor extends HTMLElement {
      * @param {String} nodeName 
      */
 
-     /**
-      * 
-      * @@todo remove second condition if solution for removing non zero char is implemented 
-      * or find a better approach as condition
-      */
     removeFormatting(selection, nodeName){
 
         let caretIndex = this.getCaret()
@@ -522,15 +517,15 @@ class TextEditor extends HTMLElement {
                 selection.anchorNode.textContent.length === 1 ||
                 selection.anchorNode.textContent.length === 0
 
+            const caretIsAtBegin = selection.anchorOffset === 0
+            const caretIsAtEnd = selection.anchorOffset === selection.anchorNode.length
+            
             if(nodeIsEmpy){
                 this.removeEmptyNode(nodeName, selection)
                 return
-            }
-                                                               
-            else if(selection.anchorOffset === 0){
+            } else if(caretIsAtBegin){
 
                 const node = selection.anchorNode.parentNode
-                const paragraph = this.shadowRoot.querySelector('p')
 
                 if(node.nodeName === nodeName){
                     
@@ -544,13 +539,15 @@ class TextEditor extends HTMLElement {
                 }
             }
 
-            // removable                       
-            else if(selection.anchorOffset === selection.anchorNode.length){
+            else if(caretIsAtEnd){
 
                 const node = selection.anchorNode.parentNode
-            
-                this.setCaretAfterNode(node, selection)
-                return
+    
+                if(node.nodeName === nodeName){
+                    
+                    this.setCaretAfterNode(node, selection)
+                    return
+                }
             }
 
             this.insertTextNode(selection, nodeName, caretIndex)
