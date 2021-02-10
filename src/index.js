@@ -528,25 +528,34 @@ class TextEditor extends HTMLElement {
             }
                                                                
             else if(selection.anchorOffset === 0){
-                
-                const node = selection.anchorNode.parentNode
 
-                this.setCaretBefore(node, selection)
-                return
+                const node = selection.anchorNode.parentNode
+                const paragraph = this.shadowRoot.querySelector('p')
+
+                if(node.nodeName === nodeName){
+                    
+                    this.setCaretBefore(node, selection)
+                    return
+
+                }else{
+
+                    this.removeSurroundingNode( selection, nodeName )
+                    return
+                }
             }
+
             // removable                       
-            else if(selection.anchorOffset === selection.anchorNode.length || selection.anchorOffset === selection.anchorNode.length){
+            else if(selection.anchorOffset === selection.anchorNode.length){
 
                 const node = selection.anchorNode.parentNode
-                console.log(node.textContent.length )
+            
                 this.setCaretAfterNode(node, selection)
                 return
             }
-                        
+
             this.insertTextNode(selection, nodeName, caretIndex)
             return
         }
-
         this.removeSurroundingNode( selection, nodeName )
         
     }
@@ -618,27 +627,26 @@ class TextEditor extends HTMLElement {
 
     removeSurroundingNode( selection, nodeName ){
 
-        const parentNode = selection.anchorNode.parentNode
-        let content = selection.getRangeAt(0).cloneContents()
-
-        // case if the surrounding node is the parentnode
-        if(parentNode.nodeName === nodeName){  
-
-            this.insertChildNodesBefore(selection, parentNode)            
-            return
-        }
-
+        const paragraph = this.shadowRoot.querySelector('paragraph')
         const anchorNode = selection.anchorNode
 
-        if(anchorNode.nodeName === nodeName){
-            
-            this.insertChildNodesBefore(selection, anchorNode)            
-            return
+        let parentNode = selection.anchorNode.parentNode
+        let content = selection.getRangeAt(0).cloneContents()
+        let node = selection.anchorNode
+
+        while( node.nodeName !== nodeName || !node.isEqualNode(paragraph)){
+
+            if(node.nodeName === nodeName){
+                this.insertChildNodesBefore(selection, node)            
+                return
+            }   
+
+            node = node.parentNode
         }
 
         // to find the correct node for removiing 
         anchorNode.childNodes.forEach( (node) => {
-            
+
             if(node.nodeName === nodeName){
 
                 const childNodes = Array.from( content.firstChild.childNodes )
@@ -655,7 +663,6 @@ class TextEditor extends HTMLElement {
                 node.remove()
             }
         })
-
     }
 
     getSurroundingNode(){
@@ -693,7 +700,18 @@ class TextEditor extends HTMLElement {
             parentOfAnchorNode.insertBefore(childNode, focusNode)    
         })
         
-        this.setRange(selection, firstChild, lastChild)
+        if(!selection.isCollapsed){
+            this.setRange(selection, firstChild, lastChild)
+
+        }else{
+
+            if(selection.anchorOffset === 0){
+                this.setCaretBefore(firstChild, selection)
+            }else{
+                this.setCaretAfterNode(lastChild, selection)
+            }
+        }
+
         focusNode.remove()
     }
 
