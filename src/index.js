@@ -519,10 +519,12 @@ class TextEditor extends HTMLElement {
 
             const caretIsAtBegin = selection.anchorOffset === 0
             const caretIsAtEnd = selection.anchorOffset === selection.anchorNode.length
-            
+
             if(nodeIsEmpy){
+                
                 this.removeEmptyNode(nodeName, selection)
                 return
+
             } else if(caretIsAtBegin){
 
                 const node = selection.anchorNode.parentNode
@@ -541,12 +543,30 @@ class TextEditor extends HTMLElement {
 
             else if(caretIsAtEnd){
 
-                const node = selection.anchorNode.parentNode
-    
+                const paragraph = this.shadowRoot.querySelector('paragraph')
+                const node = selection.anchorNode
+                let parentNode = node.parentNode
+                
                 if(node.nodeName === nodeName){
                     
                     this.setCaretAfterNode(node, selection)
                     return
+                }
+                
+                if(parentNode.nodeName === nodeName){
+                    
+                    this.setCaretAfterNode(parentNode, selection)
+                    return
+                }
+
+                while( parentNode.nodeName != nodeName || parentNode.isEqualNode(paragraph)){
+                    parentNode = parentNode.parentNode
+
+                    if(parentNode.nodeName === nodeName){
+                        this.setCaretAfterNode(parentNode, selection)
+                            
+                        return
+                    }
                 }
             }
 
@@ -627,7 +647,6 @@ class TextEditor extends HTMLElement {
         const paragraph = this.shadowRoot.querySelector('paragraph')
         const anchorNode = selection.anchorNode
 
-        let parentNode = selection.anchorNode.parentNode
         let content = selection.getRangeAt(0).cloneContents()
         let node = selection.anchorNode
 
