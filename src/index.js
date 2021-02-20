@@ -546,16 +546,20 @@ class TextEditor extends HTMLElement {
                 const paragraph = this.shadowRoot.querySelector('paragraph')
                 const node = selection.anchorNode
                 let parentNode = node.parentNode
-                
+            
                 if(node.nodeName === nodeName){
                     
                     this.setCaretAfterNode(node, selection)
+                    this.observeFormatting()
+                    this.setStatesForFormatButtons(nodeName)
                     return
                 }
                 
                 if(parentNode.nodeName === nodeName){
                     
                     this.setCaretAfterNode(parentNode, selection)
+                    this.observeFormatting()
+                    this.setStatesForFormatButtons(nodeName)
                     return
                 }
 
@@ -563,8 +567,10 @@ class TextEditor extends HTMLElement {
                     parentNode = parentNode.parentNode
 
                     if(parentNode.nodeName === nodeName){
+
                         this.setCaretAfterNode(parentNode, selection)
-                            
+                        this.observeFormatting()
+                        this.setStatesForFormatButtons(nodeName)
                         return
                     }
                 }
@@ -814,7 +820,7 @@ class TextEditor extends HTMLElement {
         const formatTagNames = [ 'B', 'I', 'U']
         const range = selection.getRangeAt(0)
         let node = range.startContainer
-
+        
         this.surroundingFormatNodes = {
             'B': false,           
             'I': false,             
@@ -843,12 +849,19 @@ class TextEditor extends HTMLElement {
         }
     }
 
-    setStatesForFormatButtons(){
+    /**
+     * 
+     * @param {String} exceptionNodeName 
+     */
+    setStatesForFormatButtons(exceptionNodeName){
+
         for (const [key, value] of Object.entries(this.surroundingFormatNodes)){
 
             const button = this.formatButtons[key]
 
-            if(value){
+            if( key === exceptionNodeName) continue
+
+            if(value && key){
                 this.addActiveState(button)
             }else{
                 this.removeActiveState(button)
