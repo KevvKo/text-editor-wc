@@ -463,7 +463,7 @@ class TextEditor extends HTMLElement {
         const endContainer = range.endContainer
         const rootNode = this.shadowRoot.querySelector('#content')
 
-        if( startContainer.tagName === 'P' || startContainer.parentNode.tagName === 'P' ){
+        // if( startContainer.tagName === 'P' || startContainer.parentNode.tagName === 'P' ){
 
             let node = document.createElement(tagName)
             node.appendChild(content)
@@ -497,7 +497,7 @@ class TextEditor extends HTMLElement {
             const lastChild = node.lastChild
 
             this.setRange(selection, firstChild, lastChild)
-        }
+        // }
     }
 
     /**
@@ -650,15 +650,16 @@ class TextEditor extends HTMLElement {
 
     removeSurroundingNode( selection, nodeName ){
 
-        const paragraph = this.shadowRoot.querySelector('paragraph')
+        const paragraph = this.shadowRoot.querySelector('p')
         const anchorNode = selection.anchorNode
 
         let content = selection.getRangeAt(0).cloneContents()
         let node = selection.anchorNode
 
-        while( node.nodeName !== nodeName || !node.isEqualNode(paragraph)){
+        while( !node.isEqualNode(paragraph)){
 
             if(node.nodeName === nodeName){
+
                 this.insertChildNodesBefore(selection, node)            
                 return
             }   
@@ -702,6 +703,7 @@ class TextEditor extends HTMLElement {
     insertChildNodesBefore(selection, focusNode){
 
         const parentOfAnchorNode = focusNode.parentNode
+        const isCollapsed = selection.isCollapsed
         let firstChild, lastChild
         const nodeArray = []
 
@@ -721,17 +723,20 @@ class TextEditor extends HTMLElement {
         nodeArray.forEach( childNode => {
             parentOfAnchorNode.insertBefore(childNode, focusNode)    
         })
-        
-        if(!selection.isCollapsed){
-            this.setRange(selection, firstChild, lastChild)
 
-        }else{
+        if(isCollapsed){
 
-            if(selection.anchorOffset === 0){
+            const caretIsAtBegin = selection.anchorOffset === 0 && selection.focusOffset === 0
+
+            if(caretIsAtBegin){
                 this.setCaretBefore(firstChild, selection)
             }else{
                 this.setCaretAfterNode(lastChild, selection)
             }
+
+        }else{
+
+            this.setRange(selection, firstChild, lastChild)
         }
 
         focusNode.remove()
