@@ -159,21 +159,17 @@ class TextEditor extends HTMLElement {
 
                 rowNode = anchorNode
 
-                }
-                else if(anchorNode.parentNode.nodeName === 'P'){
-
+            } else if(anchorNode.parentNode.nodeName === 'P'){
+                
                 rowNode = anchorNode.parentNode
             }
             
             if(rowNode){
-                
-                if(rowNode.childNodes.length === 1){
+                    
+                if(rowNode.childNodes[0].textContent.length < 1){
 
-                    if(rowNode.childNodes[0].textContent.length < 1){
-
-                        if(rowNode.previousSibling === null){ // to avoid to remove the last rownode in the textbox
-                            e.preventDefault()
-                        }
+                    if(rowNode.previousSibling === null){ // to avoid to remove the last rownode in the textbox
+                        e.preventDefault()
                     }
                 }
             }           
