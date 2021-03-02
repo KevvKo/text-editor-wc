@@ -508,7 +508,7 @@ class TextEditor extends HTMLElement {
 
         if(selection.isCollapsed){
 
-            const nodeIsEmpy = 
+            const nodeIsEmpty = 
                 selection.anchorNode.textContent.search('\u200B') > -1 &&
                 selection.anchorNode.textContent.length === 1 ||
                 selection.anchorNode.textContent.length === 0
@@ -516,14 +516,14 @@ class TextEditor extends HTMLElement {
             const caretIsAtBegin = selection.anchorOffset === 0
             const caretIsAtEnd = selection.anchorOffset === selection.anchorNode.length
 
-            if(nodeIsEmpy){
+            if(nodeIsEmpty){
                 
                 this.removeEmptyNode(nodeName, selection)
                 return
 
             } else if(caretIsAtBegin){
 
-                const node = selection.anchorNode.parentNode
+                let node = selection.anchorNode.parentNode
 
                 if(node.nodeName === nodeName){
                     
@@ -532,7 +532,8 @@ class TextEditor extends HTMLElement {
 
                 }else{
 
-                    this.removeSurroundingNode( selection, nodeName )
+                    const parentnode = this.getParentNode(node, nodeName)
+                    this.insertEmptyChildnodesBefore(parentnode, nodeName)
                     return
                 }
             }
@@ -641,7 +642,7 @@ class TextEditor extends HTMLElement {
     /**
      * 
      * @param {Selection} selection
-     * @param {String} nodeName 
+     * @param {String} nodeName  
      */
 
     removeSurroundingNode( selection, nodeName ){
@@ -736,6 +737,60 @@ class TextEditor extends HTMLElement {
         }
 
         focusNode.remove()
+    }
+
+    /**
+     * 
+     * @param {Node} node
+     * @param {String} nodeName
+     */
+    insertEmptyChildnodesBefore(node, nodeName){  
+
+        const nodes = this.surroundingFormatNodes
+        let currentNode, anchorNode
+
+        for (const [key, value] of Object.entries(nodes)){
+
+            if(value && key !== nodeName){
+
+                const node = document.createElement(key)
+                
+                if(!currentNode){
+                    currentNode = node
+                    anchorNode = node
+                    continue
+                }
+
+                currentNode.appendChild(node)
+                currentNode = node
+            }
+        }
+
+        currentNode.innerHTML = '\u200B';
+        node.parentNode.insertBefore(anchorNode, node)
+        this.setCaret(0, currentNode)
+    }
+
+
+    /**
+     * 
+     * @param {Node} childnode
+     * @param {String} nodeName 
+     */
+
+    getParentNode(childnode, nodeName){
+
+        const paragraph = this.shadowRoot.querySelector('p')
+        let node = childnode
+
+        while( !node.isEqualNode(paragraph)){
+
+            if(node.nodeName === nodeName){
+                return node
+            }   
+
+            node = node.parentNode
+        }
     }
 
     /**
