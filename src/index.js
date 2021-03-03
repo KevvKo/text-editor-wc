@@ -1,8 +1,6 @@
 import image1 from './assets/img/format_bold-black-24dp.svg';
 import image2 from './assets/img/format_italic-black-24dp.svg';
 import image3 from './assets/img/format_underlined-black-24dp.svg';
-import image4 from './assets/img/format_list_numbered-black-24dp.svg';
-import image5 from './assets/img/format_list_bulleted-black-24dp.svg';
 
 import {style} from './assets/js/style'
 
@@ -53,14 +51,6 @@ class TextEditor extends HTMLElement {
         underlinedButton.id = 'underlined'
         underlinedButton.setAttribute('class', 'toolbox-button');
 
-        const unorderedButton = document.createElement('span');
-        unorderedButton.id = 'unorderedList'
-        unorderedButton.setAttribute('class', 'toolbox-button');
-
-        const orderedButton = document.createElement('span');
-        orderedButton.id = 'orderedList'
-        orderedButton.setAttribute('class', 'toolbox-button');
-
         const row = document.createElement('p')
         row.innerHTML = '\u200B';
 
@@ -86,15 +76,6 @@ class TextEditor extends HTMLElement {
             this.formatUnderlined(underlinedButton)
         })
 
-        unorderedButton.addEventListener('click', () => {
-            this.formatUnorderedList(unorderedButton, orderedButton)
-
-        })
-
-        orderedButton.addEventListener('click', () => {
-            this.formatOrderedList(orderedButton, unorderedButton)
-        })
-
         //create the images
         const imageBold = document.createElement('img')
         imageBold.src = image1
@@ -104,12 +85,6 @@ class TextEditor extends HTMLElement {
 
         const imageUnderlined = document.createElement('img');
         imageUnderlined.src = image3
-
-        const imageUnorderedList = document.createElement('img');
-        imageUnorderedList.src = image4
-
-        const imageOrderedList = document.createElement('img');
-        imageOrderedList.src = image5   
 
         const shadow = this.attachShadow({mode: 'open'}); 
         shadow.appendChild(template);
@@ -123,14 +98,9 @@ class TextEditor extends HTMLElement {
         toolboxSection1.appendChild(italicButton);
         toolboxSection1.appendChild(underlinedButton);
 
-        toolboxSection2.appendChild(unorderedButton);
-        toolboxSection2.appendChild(orderedButton);
-
         boldButton.appendChild(imageBold);
         italicButton.appendChild(imageItalic);
         underlinedButton.appendChild(imageUnderlined);
-        unorderedButton.appendChild(imageUnorderedList);
-        orderedButton.appendChild(imageOrderedList);
 
         template.appendChild(textbox);
         textbox.appendChild(row)
@@ -336,22 +306,6 @@ class TextEditor extends HTMLElement {
      * @param {HTMLButtonElement} unorderedButton
      * @param {HTMLButtonElement} orderedButton
      */
-
-    formatUnorderedList(unorderedButton, orderedButton){
-        this.toggleActiveState(unorderedButton)
-        this.removeActiveState(orderedButton)
-    }
-
-    /**
-     * 
-     * @param {HTMLButtonElement} orderedButton
-     * @param {HTMLButtonElement} unorderedButton
-     */
-
-    formatOrderedList(orderedButton, unorderedButton){
-        this.toggleActiveState(orderedButton)
-        this.removeActiveState(unorderedButton)
-    }
 
     getCaret(){
 
