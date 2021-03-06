@@ -703,6 +703,7 @@ class TextEditor extends HTMLElement {
 
         const nodes = this.surroundingFormatNodes
         let currentNode, anchorNode
+        console.log(node)
 
         for (const [elementName, value] of Object.entries(nodes)){
 
@@ -721,7 +722,10 @@ class TextEditor extends HTMLElement {
             }
         }
 
-        currentNode.innerHTML = '\u200B';
+        if(!currentNode){
+            this.setCaretAfterNode(node, window.getSelection())
+            return
+        }
 
         if(position === 'before'){
             node.parentNode.insertBefore(anchorNode, node)
