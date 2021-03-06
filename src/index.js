@@ -110,6 +110,7 @@ class TextEditor extends HTMLElement {
             'I': italicButton,
             'U': underlinedButton
         }
+        this.editor = textbox
     }
 
     /**
@@ -703,7 +704,6 @@ class TextEditor extends HTMLElement {
 
         const nodes = this.surroundingFormatNodes
         let currentNode, anchorNode
-        console.log(node)
 
         for (const [elementName, value] of Object.entries(nodes)){
 
@@ -841,35 +841,87 @@ class TextEditor extends HTMLElement {
         const formatTagNames = [ 'B', 'I', 'U']
         const range = selection.getRangeAt(0)
         let node = range.startContainer
-        
+        const endNode = range.endContainer
+
         this.surroundingFormatNodes = {
             'B': false,           
             'I': false,             
             'U': false            
         }
 
-        while( node.tagName !== 'P'){
+        if(selection.isCollapsed || selection.anchorOffset === 0 && selection.focusOffset === selection.focusNode.length){
 
-            if(node.nodeType === 3) {
+            while( node.tagName !== 'P'){
+
+                if(node.nodeType === 3) {
+                    node = node.parentNode 
+                    continue
+                }
+    
+                let tagName = node.tagName
+    
+                if(node.tagName === 'P'){
+                    return
+                }
+    
+                if(formatTagNames.includes( tagName )){
+                    this.surroundingFormatNodes[ tagName ] = true
+                }else{
+                    this.surroundingFormatNodes[ tagName ] = false
+                }
                 node = node.parentNode 
-                continue
+            }
+            return
+        }
+
+        if(this.editor.isEqualNode(range.commonAncestorContainer)){
+
+            const childNodes = range.commonAncestorContainer.childNodes
+            
+            for(let i = 0,l = childNodes.length; i < l ; i++){
+               
+                let childNode = childNodes[i]
+
+                if(childNode.contains(endNode)) {
+
+                    this.checkForActiveFormatNodes(childNode)
+                    break
+                }
+
+                this.checkForActiveFormatNodes(childNode)
             }
 
-            let tagName = node.tagName
-
-            if(node.tagName === 'P'){
-                return
-            }
-
-            if(formatTagNames.includes( tagName )){
-                this.surroundingFormatNodes[ tagName ] = true
-            }else{
-                this.surroundingFormatNodes[ tagName ] = false
-            }
-            node = node.parentNode 
+        }else {
+            this.checkForActiveFormatNodes(range.commonAncestorContainer)
         }
     }
 
+    /**
+     * 
+     * @param {Node} node 
+     */
+    checkForActiveFormatNodes(node){
+
+        if(node.nodeType === 3) return
+
+        const formatTagNames = [ 'B', 'I', 'U']
+        const nodeName = node.nodeName
+
+        if(formatTagNames.includes(nodeName)){
+            this.surroundingFormatNodes[nodeName] = true
+        }
+
+        if(node.childNodes) {
+
+            node.childNodes.forEach( childNode => {
+                this.checkForActiveFormatNodes(childNode)
+            })
+
+        }else {
+            return
+        }
+  
+    }
     /**
      * 
      * @param {String} exceptionNodeName 
