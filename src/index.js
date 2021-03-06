@@ -487,7 +487,7 @@ class TextEditor extends HTMLElement {
                 }else{
 
                     const parentnode = this.getParentNode(node, nodeName)
-                    this.insertEmptyChildnodesBefore(parentnode, nodeName)
+                    this.insertAdjacentEmptyFormatNodes(parentnode, nodeName, 'before')
                     return
                 }
             }
@@ -500,15 +500,15 @@ class TextEditor extends HTMLElement {
             
                 if(node.nodeName === nodeName){
                     
-                    this.setCaretAfterNode(node, selection)
+                    this.insertAdjacentEmptyFormatNodes(node, nodeName, 'after')
                     this.observeFormatting()
                     this.setStatesForFormatButtons(nodeName)
                     return
                 }
                 
                 if(parentNode.nodeName === nodeName){
-                    
-                    this.setCaretAfterNode(parentNode, selection)
+
+                    this.insertAdjacentEmptyFormatNodes(parentNode, nodeName, 'after')
                     this.observeFormatting()
                     this.setStatesForFormatButtons(nodeName)
                     return
@@ -519,7 +519,7 @@ class TextEditor extends HTMLElement {
 
                     if(parentNode.nodeName === nodeName){
 
-                        this.setCaretAfterNode(parentNode, selection)
+                        this.insertAdjacentEmptyFormatNodes(parentNode, nodeName, 'after')
                         this.observeFormatting()
                         this.setStatesForFormatButtons(nodeName)
                         return
@@ -697,17 +697,18 @@ class TextEditor extends HTMLElement {
      * 
      * @param {Node} node
      * @param {String} nodeName
+     * @param {String} position
      */
-    insertEmptyChildnodesBefore(node, nodeName){  
+    insertAdjacentEmptyFormatNodes(node, nodeName, position){  
 
         const nodes = this.surroundingFormatNodes
         let currentNode, anchorNode
 
-        for (const [key, value] of Object.entries(nodes)){
+        for (const [elementName, value] of Object.entries(nodes)){
 
-            if(value && key !== nodeName){
+            if(value && elementName !== nodeName){
 
-                const node = document.createElement(key)
+                const node = document.createElement(elementName)
                 
                 if(!currentNode){
                     currentNode = node
@@ -721,7 +722,13 @@ class TextEditor extends HTMLElement {
         }
 
         currentNode.innerHTML = '\u200B';
-        node.parentNode.insertBefore(anchorNode, node)
+
+        if(position === 'before'){
+            node.parentNode.insertBefore(anchorNode, node)
+        }else if(position === 'after'){
+            node.after(anchorNode)
+        }
+
         this.setCaret(0, currentNode)
     }
 
