@@ -1,16 +1,16 @@
 # text-editor-wc
 ## What is this?
-A webcomponent to implement a text editor with default text formatting.
+A webcomponent to implement a text editor with default text formatting into your project! 
 
 ![Example](example.png)
 
-This web component is developed with native javascript and will be extended with further functions for formatting.
-
+This editor is developed with the javascript APIs **Selection** and **Range**, due to the function **execCommand** is obsolet. 
+Most usecases are considered, but further there are same cases not yet covered. 
 ## Formatting-features
 - bold
 - italic
 - underlined
-  
-## status
-The web component is just in development and need some time for finishing and testing.
-After the release, the web compoment will be reveiving further functions
+
+## Support
+Currently, the webcomponent only support Firefox. A full support for Chrome at this time isn't planned.
+
