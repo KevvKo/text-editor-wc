@@ -1,3 +1,4 @@
+import { first } from 'lodash';
 import image1 from './assets/img/format_bold-black-24dp.svg';
 import image2 from './assets/img/format_italic-black-24dp.svg';
 import image3 from './assets/img/format_underlined-black-24dp.svg';
@@ -110,6 +111,7 @@ class TextEditor extends HTMLElement {
             'I': italicButton,
             'U': underlinedButton
         }
+
         this.editor = textbox
     }
 
@@ -244,8 +246,7 @@ class TextEditor extends HTMLElement {
         this.toggleActiveState(button)
         this.surroundingFormatNodes[tagName] = true
 
-        if(selection.type === 'Caret' && selection.isCollapsed){
-
+        if(selection.isCollapsed){
 
             const box = this.shadowRoot.getElementById('content')
             const paragraph = this.shadowRoot.querySelector('#content p')
@@ -328,8 +329,10 @@ class TextEditor extends HTMLElement {
         let selection = window.getSelection() 
 
         if(element){
+
             range.setStart( element, caretIndex );
             range.setEnd( element, caretIndex);
+            
         } else{
             
             range.setStart( selection.focusNode, caretIndex );
@@ -449,7 +452,7 @@ class TextEditor extends HTMLElement {
 
             this.setRange(selection, firstChild, lastChild)
         // }
-    }
+    }  
 
     /**
      * 
@@ -528,9 +531,10 @@ class TextEditor extends HTMLElement {
                 }
             }
 
-            this.insertTextNode(selection, nodeName, caretIndex)
+            this.removeSurroundingNode( selection, nodeName )
             return
         }
+
         this.removeSurroundingNode( selection, nodeName )
         
     }
@@ -656,6 +660,8 @@ class TextEditor extends HTMLElement {
 
         const parentOfAnchorNode = focusNode.parentNode
         const isCollapsed = selection.isCollapsed
+        const caretIndex = this.getCaret()
+        const focusNodeLength = selection.focusNode.length
         let firstChild, lastChild
         const nodeArray = []
 
@@ -678,11 +684,29 @@ class TextEditor extends HTMLElement {
 
         if(isCollapsed){
 
-            const caretIsAtBegin = selection.anchorOffset === 0 && selection.focusOffset === 0
+            const caretIsAtBegin = caretIndex === 0 
+            const caretIsInTheMiddle = caretIndex > 0 && caretIndex <= focusNodeLength
 
             if(caretIsAtBegin){
+
                 this.setCaretBefore(firstChild, selection)
-            }else{
+
+            } else if (caretIsInTheMiddle){
+            
+                let child = firstChild.firstChild
+
+                while(child){
+
+                    if(child.nodeType === 3){
+                        this.setCaret(caretIndex, child)
+                    }
+
+                    child = child.firstChild
+                }
+
+
+            } else{
+
                 this.setCaretAfterNode(lastChild, selection)
             }
 
