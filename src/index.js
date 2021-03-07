@@ -871,57 +871,9 @@ class TextEditor extends HTMLElement {
                 }
                 node = node.parentNode 
             }
-            return
-        }
-
-        if(this.editor.isEqualNode(range.commonAncestorContainer)){
-
-            const childNodes = range.commonAncestorContainer.childNodes
-            
-            for(let i = 0,l = childNodes.length; i < l ; i++){
-               
-                let childNode = childNodes[i]
-
-                if(childNode.contains(endNode)) {
-
-                    this.checkForActiveFormatNodes(childNode)
-                    break
-                }
-
-                this.checkForActiveFormatNodes(childNode)
-            }
-
-        }else {
-            this.checkForActiveFormatNodes(range.commonAncestorContainer)
         }
     }
 
-    /**
-     * 
-     * @param {Node} node 
-     */
-    checkForActiveFormatNodes(node){
-
-        if(node.nodeType === 3) return
-
-        const formatTagNames = [ 'B', 'I', 'U']
-        const nodeName = node.nodeName
-
-        if(formatTagNames.includes(nodeName)){
-            this.surroundingFormatNodes[nodeName] = true
-        }
-
-        if(node.childNodes) {
-
-            node.childNodes.forEach( childNode => {
-                this.checkForActiveFormatNodes(childNode)
-            })
-
-        }else {
-            return
-        }
-  
-    }
     /**
      * 
      * @param {String} exceptionNodeName 
