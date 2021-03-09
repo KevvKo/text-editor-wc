@@ -692,12 +692,17 @@ class TextEditor extends HTMLElement {
                 this.setCaretBefore(firstChild, selection)
 
             } else if (caretIsInTheMiddle){
-            
+
+                if(firstChild.nodeType === 3) {
+                    this.setCaret(caretIndex, firstChild)
+                }
+
                 let child = firstChild.firstChild
 
                 while(child){
 
                     if(child.nodeType === 3){
+
                         this.setCaret(caretIndex, child)
                     }
 
