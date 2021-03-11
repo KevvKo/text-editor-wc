@@ -925,6 +925,68 @@ class TextEditor extends HTMLElement {
                 }
                 node = node.parentNode 
             }
+            return
+        }
+
+        if(this.editor.isEqualNode(range.commonAncestorContainer)){
+
+            const childNodes = range.commonAncestorContainer.childNodes
+            
+            for(let i = 0,l = childNodes.length; i < l ; i++){
+               
+                let childNode = childNodes[i]
+
+                if(childNode.contains(endNode)) {
+
+                    this.checkForActiveFormatNodes(childNode)
+                    break
+                }
+
+                this.checkForActiveFormatNodes(childNode)
+            }
+
+        }else {
+            this.checkForActiveFormatNodes(range.commonAncestorContainer)
+        }
+    }
+
+    /**
+     * 
+     * @param {Node} node 
+     */
+
+    checkForActiveFormatNodes(node){
+
+        const formatTagNames = [ 'B', 'I', 'U']
+
+        if(node.nodeType === 3){
+
+            do {
+                
+                node = node.parentNode
+
+                if(formatTagNames.includes(node.nodeName)){
+                    this.surroundingFormatNodes[node.nodeName] = true
+                }
+
+            } while (!node.isEqualNode(this.editor))
+            return
+        }
+
+        const nodeName = node.nodeName
+
+        if(formatTagNames.includes(nodeName)){
+            this.surroundingFormatNodes[nodeName] = true
+        }
+
+        if(node.childNodes) {
+
+            node.childNodes.forEach( childNode => {
+                this.checkForActiveFormatNodes(childNode)
+            })
+
+        }else {
+            return
         }
     }
 
