@@ -185,10 +185,6 @@ class TextEditor extends HTMLElement {
         }
     }
 
-    /**
-     * 
-     * @param {Node} node 
-     */
     removeZeroWidthCharacter(){
 
         const selection = window.getSelection()
@@ -259,7 +255,16 @@ class TextEditor extends HTMLElement {
                 this.setCaret(0, element)
 
             }else{
-            
+                
+                const caretIndex = this.getCaret()
+                const focusNodeLength = selection.focusNode.length
+                const caretIsInTheMiddle = caretIndex > 0 && caretIndex < focusNodeLength
+
+                if(caretIsInTheMiddle){
+                    this.surroundSelection(selection, tagName)
+                    return
+                }
+
                 this.insertElement(element, selection)
             }
 
@@ -402,6 +407,26 @@ class TextEditor extends HTMLElement {
         range.setStart(element, 0)
         range.setEnd(element, 0)
 
+    }
+
+    /**
+     * 
+     * @param {Selection} selection 
+     * @param {String} tagName 
+     */
+
+    surroundSelection(selection, tagName){
+
+        const range = selection.getRangeAt(0) 
+        const anchorNode = selection.anchorNode
+        const node = document.createElement(tagName.toLowerCase())
+        const caretIndex = this.getCaret()
+
+        range.setStart(anchorNode, 0)
+        range.setEnd(anchorNode, anchorNode.length)
+        
+        range.surroundContents(node)
+        this.setCaret(caretIndex, node.firstChild)
     }
 
     /**
