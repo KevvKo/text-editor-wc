@@ -1,4 +1,4 @@
-import { first } from 'lodash';
+import { first, range } from 'lodash';
 import image1 from './assets/img/format_bold-black-24dp.svg';
 import image2 from './assets/img/format_italic-black-24dp.svg';
 import image3 from './assets/img/format_underlined-black-24dp.svg';
@@ -488,16 +488,20 @@ class TextEditor extends HTMLElement {
     removeFormatting(selection, nodeName){
 
         let caretIndex = this.getCaret()
+        const anchorNode = selection.anchorNode
+        const focusNode = selection.focusNode
+        const anchorOffset = selection.anchorOffset
+        const focusOffset = selection.focusOffset
 
         if(selection.isCollapsed){
 
             const nodeIsEmpty = 
-                selection.anchorNode.textContent.search('\u200B') > -1 &&
-                selection.anchorNode.textContent.length === 1 ||
-                selection.anchorNode.textContent.length === 0
+                anchorNode.textContent.search('\u200B') > -1 &&
+                anchorNode.textContent.length === 1 ||
+                anchorNode.textContent.length === 0
 
-            const caretIsAtBegin = selection.anchorOffset === 0
-            const caretIsAtEnd = selection.anchorOffset === selection.anchorNode.length
+            const caretIsAtBegin = anchorOffset === 0
+            const caretIsAtEnd = anchorOffset === anchorNode.length
 
             if(nodeIsEmpty){
                 
@@ -506,7 +510,7 @@ class TextEditor extends HTMLElement {
 
             } else if(caretIsAtBegin){
 
-                let node = selection.anchorNode.parentNode
+                let node = anchorNode.parentNode
 
                 if(node.nodeName === nodeName){
                     
@@ -524,7 +528,7 @@ class TextEditor extends HTMLElement {
             else if(caretIsAtEnd){
 
                 const paragraph = this.shadowRoot.querySelector('paragraph')
-                const node = selection.anchorNode
+                const node = anchorNode
                 let parentNode = node.parentNode
             
                 if(node.nodeName === nodeName){
@@ -560,7 +564,25 @@ class TextEditor extends HTMLElement {
             return
         }
 
-        this.removeSurroundingNode( selection, nodeName )
+        const paragraph = this.shadowRoot.querySelector('p')
+
+        // range cases for textnode
+        const rangeContainsCompleteTextNode = 
+            anchorNode.nodeType === 3
+            && anchorOffset === 0 && focusOffset === focusNode.length
+            || focusOffset === 0 && anchorOffset === anchorNode.length
+
+        // range cases for a formatnode
+        const rangeContainsCompleteFormatNode = 
+            Object.keys( this.surroundingFormatNodes ).includes( anchorNode.nodeName )
+            || Object.keys( this.surroundingFormatNodes ).includes( focusNode.nodeName )
+            || anchorNode.isEqualNode( paragraph ) && focusNode.nodeType === 3
+            || focusNode.isEqualNode( paragraph ) && anchorNode.nodeType === 3
+
+
+        if( rangeContainsCompleteTextNode || rangeContainsCompleteFormatNode ){
+            this.removeSurroundingNode( selection, nodeName )
+        }
         
     }
 
@@ -630,7 +652,6 @@ class TextEditor extends HTMLElement {
      */
 
     removeSurroundingNode( selection, nodeName ){
-
         const paragraph = this.shadowRoot.querySelector('p')
         const anchorNode = selection.anchorNode
 
@@ -640,7 +661,6 @@ class TextEditor extends HTMLElement {
         while( !node.isEqualNode(paragraph)){
 
             if(node.nodeName === nodeName){
-
                 this.insertChildNodesBefore(selection, node)            
                 return
             }   
